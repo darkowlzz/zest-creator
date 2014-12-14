@@ -1,12 +1,24 @@
 module.exports = ZestCreator;
 
-var _ = require('underscore');
+var createStatement = require('./createStatement'),
+    addToStatement  = require('./addToStatement'),
+    _               = require('underscore');
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
 
+
+/**
+ * ZestCreator class.
+ *
+ * @param {object} opts
+ *    A configuration object to set zest creator properties like
+ *    `about`, `title`, `description`, `client`, `author`, `zestVersion`
+ *    and `debug`.
+ */
 function ZestCreator (opts) {
-  this.config = _.extend({
+  var opts = opts || {};
+  this.config = _.defaults(opts, {
     about: 'About text',
     title: 'Unnamed Zest script',
     description: 'No description',
@@ -14,7 +26,7 @@ function ZestCreator (opts) {
     author: 'anon',
     zestVersion: ZEST_VERSION,
     debug: DEBUG
-  }, opts);
+  });
 
   this.index = 1;  // script index
   this.stmtIndex = 0;  // statement index
@@ -23,44 +35,21 @@ function ZestCreator (opts) {
 
 ZestCreator.prototype = {
 
-  // Add a new statement to `statements`
-  addStatement: function (data) {
-    var stmt;
-
-    switch (data.elementType) {
-      case 'ZestComment':
-        stmt = _.extend({
-          comment: 'None',
-          index: ++this.stmtIndex,
-          elementType: data.elementType
-        }, data);
-        break;
-
-      case 'ZestRequest':
-        stmt = _.extend({
-          url: 'unknown',
-          data: 'unknown',
-          method: 'unknown',
-          headers: 'unknown',
-          response: {
-            url: 'unknown',
-            headers: 'unknown',
-            body: 'unknown',
-            statusCode: 'unknown',
-            responseTimeInMs: 'unknown',
-            elementType: 'ZestResponse'
-          },
-          followRedirect: false,
-          index: ++this.stmtIndex,
-          elementType: data.elementType
-        }, data);
-        break;
-
-      default:
-        stmt = null;
-    }
-    if (!! stmt)
+  /**
+   * Add a new statement to zest `statements`
+   *
+   * @param {object} ele
+   *    An object consisting of all the properties of any type of zest
+   *    statements.
+   */
+  addStatement: function (ele) {
+    var stmt = createStatement(ele);
+    if (_.has(ele, 'subElement')) {
+      addToStatement(stmt, ele.parentIndex, this.statements);
+    } else if (!! stmt) {
+      stmt.index = ++this.stmtIndex;
       this.statements.push(stmt);
+    }
   },
 
   // Return a proper zest object

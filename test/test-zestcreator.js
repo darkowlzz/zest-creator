@@ -69,15 +69,16 @@ describe('pass zc basic zest statements', function () {
     zc.addStatement({
       url: 'http://foo.com',
       method: 'GET',
-      response: {
-        url: 'http://bar.com',
-        headers: '',
-        body: 'qwerty',
-        statusCode: 200,
-        responseTimeInMs: 222,
-        elementType: 'ZestResponse'
-      },
       elementType: 'ZestRequest'
+    });
+    zc.addStatement({
+      url: 'http://bar.com',
+      body: 'qwerty',
+      statusCode: 200,
+      responseTimeInMs: 222,
+      elementType: 'ZestResponse',
+      subElement: true,
+      parentIndex: 1
     });
     var r = zc.getZest();
     var stmt = r.statements[0];
