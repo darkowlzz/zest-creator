@@ -42,6 +42,7 @@ describe('pass zc basic zest statements', function () {
       index: 1,
       elementType: 'ZestScript'
     });
+    zc.statementCount.should.be.exactly(0);
   });
 
   it('should create 2 zest comment statements', function () {
@@ -55,13 +56,13 @@ describe('pass zc basic zest statements', function () {
       index: 1,
       elementType: 'ZestComment'
     });
-
     var stmt = r.statements[1];
     stmt.should.have.properties({
       comment: 'another one',
       index: 2,
       elementType: 'ZestComment'
     });
+    zc.statementCount.should.be.exactly(2);
   });
 
   it('should create request statement', function () {
@@ -97,5 +98,6 @@ describe('pass zc basic zest statements', function () {
       responseTimeInMs: 222,
       elementType: 'ZestResponse'
     });
+    zc.statementCount.should.be.exactly(1);
   });
 });

@@ -52,7 +52,7 @@ ZestCreator.prototype = {
     }
   },
 
-  // Return a proper zest object
+  // Returns a proper zest object.
   getZest: function () {
     return {
       about: this.config.about,
@@ -66,6 +66,11 @@ ZestCreator.prototype = {
       index: this.index,
       elementType: 'ZestScript'
     };
+  },
+
+  // Returns the number of statements in the zest object.
+  get statementCount () {
+    return this.stmtIndex;
   },
 
   log: function (message, args) {
