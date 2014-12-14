@@ -25,23 +25,13 @@ function createStatement (ele) {
 
     case 'ZestRequest':
       properties = _.pick(ele, 'url', 'data', 'method', 'headers',
-                          'followRedirect', 'elementType');
+                               'followRedirect', 'elementType');
       stmt = _.defaults(properties, {
         url: 'unknown',
         data: 'unknown',
         method: 'unknown',
         headers: 'unknown',
         response: {},
-           /*
-        response: {
-          url: 'unknown',
-          headers: 'unknown',
-          body: 'unknown',
-          statusCode: 'unknown',
-          responseTimeInMs: 'unknown',
-          elementType: 'ZestResponse'
-        },
-        */
         followRedirect: false,
         index: '',
         elementType: ele.elementType
@@ -57,6 +47,14 @@ function createStatement (ele) {
         body: 'unknown',
         statusCode: 'unknown',
         responseTimeInMs: 'unknown',
+        elementType: ele.elementType
+      });
+      break;
+
+    case 'ZestAssertion':
+      properties = _.pick(ele, 'rootExpression', 'elementType');
+      stmt = _.defaults(properties, {
+        rootExpression: ele.rootExpression,
         elementType: ele.elementType
       });
       break;

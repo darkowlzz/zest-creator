@@ -44,7 +44,7 @@ ZestCreator.prototype = {
    */
   addStatement: function (ele) {
     var stmt = createStatement(ele);
-    if (_.has(ele, 'subElement')) {
+    if (_.has(ele, 'subStatement')) {
       addToStatement(stmt, ele.parentIndex, this.statements);
     } else if (!! stmt) {
       stmt.index = ++this.stmtIndex;
@@ -71,6 +71,17 @@ ZestCreator.prototype = {
   // Returns the number of statements in the zest object.
   get statementCount () {
     return this.stmtIndex;
+  },
+
+  /**
+   * Returns statement with the given index.
+   *
+   * @param {number} index - Index of requested statement.
+   *
+   * @return {object} - requested statement object.
+   */
+  getStatement: function (index) {
+    return this.statements[index - 1];
   },
 
   log: function (message, args) {
