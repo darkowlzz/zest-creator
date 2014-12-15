@@ -2,7 +2,8 @@ module.exports = ZestCreator;
 
 var createStatement = require('./createStatement'),
     addToStatement  = require('./addToStatement'),
-    _               = require('underscore');
+    _               = require('underscore'),
+    fs              = require('fs');
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
@@ -88,5 +89,14 @@ ZestCreator.prototype = {
     if (this.debug) {
       console.log(message, args);
     }
+  },
+
+  saveToFile: function (filename) {
+    var filename = filename || 'newzest.zst',
+        z        = this.getZest(),
+        text     = JSON.stringify(z, undefined, 2),
+        regex    = new RegExp('.zst$');
+    filename = regex.test(filename) ? filename : (filename + '.zst');
+    fs.writeFileSync(filename, text);
   }
 };
