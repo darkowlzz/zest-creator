@@ -3,6 +3,8 @@ module.exports = ZestCreator;
 var createStatement = require('./createStatement'),
     addToStatement  = require('./addToStatement'),
     _               = require('underscore'),
+    JQL             = require('jsonquerylanguage'),
+    jql             = new JQL(),
     fs              = require('fs');
 
 var DEBUG = true;
@@ -86,7 +88,9 @@ ZestCreator.prototype = {
    * @return {object} - requested statement object.
    */
   getStatement: function (index) {
-    return this.statements[index - 1];
+    var result = jql.searchAndGetValues(this.statements,
+                                        '~[?(@.index == ' + index + ' )]');
+    return result[0];
   },
 
   log: function (message, args) {

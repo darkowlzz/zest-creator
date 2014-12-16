@@ -179,9 +179,10 @@ describe('ZC basic testing', function () {
         elementType: 'ZestActionFail',
         index: 6
       };
-      stmt = zc.getStatement(index);
-      stmt.ifStatements[0].should.have.properties(expectedIf);
-      stmt.elseStatements[0].should.have.properties(expectedElse);
+      stmt = zc.getStatement(5);
+      stmt.should.have.properties(expectedIf);
+      stmt = zc.getStatement(6);
+      stmt.should.have.properties(expectedElse);
       zc.statementCount.should.be.exactly(6);
     });
   });
