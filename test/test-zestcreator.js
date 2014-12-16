@@ -21,8 +21,32 @@ var sampleRes = {
   statusCode: 200,
   responseTimeInMs: 222,
   elementType: 'ZestResponse',
-  subStatement: true
+  subStatementOf: 'response'
 }
+
+var sampleCondition = {
+  rootExpression: {
+    value: 'GET',
+    variableName: 'request.method',
+    caseExact: false,
+    not: false,
+    elementType: 'ZestExpressionEquals'
+  },
+  ifStatements: [],
+  elseStatements: [],
+  elementType: 'ZestConditional'
+}
+
+var sampleActionPrint = {
+  message: 'Pass',
+  elementType: 'ZestActionPrint'
+};
+
+var sampleActionFail = {
+  message: 'Fail',
+  priority: 'HIGH',
+  elementType: 'ZestActionFail'
+};
 
 
 describe('create a ZestCreator object', function () {
@@ -107,7 +131,7 @@ describe('ZC basic testing', function () {
       zc.statementCount.should.be.exactly(3);
     });
 
-    it('should create assertions statements', function () {
+    it('should create assertion statement', function () {
       zc.addStatement({
         rootExpression: {
           code: 200,
@@ -115,7 +139,7 @@ describe('ZC basic testing', function () {
           elementType: 'ZestExpressionStatusCode'
         },
         elementType: 'ZestAssertion',
-        subStatement: true,
+        subStatementOf: 'assertions',
         parentIndex: zc.statementCount
       });
       var stmt = zc.getStatement(zc.statementCount);
@@ -126,6 +150,39 @@ describe('ZC basic testing', function () {
       });
       stmt.assertions[0].should.have.property('elementType', 'ZestAssertion');
       zc.statementCount.should.be.exactly(3);
+    });
+
+    it('should create conditional statement', function () {
+      zc.addStatement(sampleCondition);
+      var stmt = zc.getStatement(zc.statementCount);
+      stmt.should.have.properties(sampleCondition);
+
+      var actionPrint = _.clone(sampleActionPrint);
+      actionPrint.subStatementOf = 'ifStatements';
+      var index = zc.statementCount;
+      actionPrint.parentIndex = index;
+      zc.addStatement(actionPrint);
+
+      var actionFail = _.clone(sampleActionFail);
+      actionFail.subStatementOf = 'elseStatements';
+      actionFail.parentIndex = index;
+      zc.addStatement(actionFail);
+
+      var expectedIf = {
+        message: 'Pass',
+        elementType: 'ZestActionPrint',
+        index: 5
+      };
+      var expectedElse = {
+        message: 'Fail',
+        priority: 'HIGH',
+        elementType: 'ZestActionFail',
+        index: 6
+      };
+      stmt = zc.getStatement(index);
+      stmt.ifStatements[0].should.have.properties(expectedIf);
+      stmt.elseStatements[0].should.have.properties(expectedElse);
+      zc.statementCount.should.be.exactly(6);
     });
   });
 });

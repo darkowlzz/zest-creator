@@ -45,8 +45,12 @@ ZestCreator.prototype = {
    */
   addStatement: function (ele) {
     var stmt = createStatement(ele);
-    if (_.has(ele, 'subStatement')) {
-      addToStatement(stmt, ele.parentIndex, this.statements);
+    if (_.has(ele, 'subStatementOf')) {
+      if ((stmt.elementType == 'ZestActionPrint') || 
+          (stmt.elementType == 'ZestActionFail')) {
+        stmt.index = ++this.stmtIndex;
+      }
+      addToStatement(stmt, ele, this.statements);
     } else if (!! stmt) {
       stmt.index = ++this.stmtIndex;
       this.statements.push(stmt);
@@ -91,6 +95,11 @@ ZestCreator.prototype = {
     }
   },
 
+  /**
+   * Save zest to a file.
+   *
+   * @param {string} [optional] filename - Name of the file.
+   */
   saveToFile: function (filename) {
     var filename = filename || 'newzest.zst',
         z        = this.getZest(),

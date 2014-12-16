@@ -18,14 +18,14 @@ function createStatement (ele) {
       properties = _.pick(ele, 'comment', 'elementType');
       stmt = _.defaults(properties, {
         comment: 'None',
-        index: '',
-        elementType: ele.elementType
+        index: ''
       });
       break;
 
     case 'ZestRequest':
-      properties = _.pick(ele, 'url', 'data', 'method', 'headers',
-                               'followRedirect', 'elementType');
+      properties = _.pick(ele,
+                          'url', 'data', 'method', 'headers',
+                          'followRedirect', 'elementType');
       stmt = _.defaults(properties, {
         url: 'unknown',
         data: 'unknown',
@@ -33,13 +33,13 @@ function createStatement (ele) {
         headers: 'unknown',
         response: {},
         followRedirect: false,
-        index: '',
-        elementType: ele.elementType
+        index: ''
       });
       break;
 
     case 'ZestResponse':
-      properties = _.pick(ele, 'url', 'headers', 'body', 'statusCode',
+      properties = _.pick(ele,
+                          'url', 'headers', 'body', 'statusCode',
                           'responseTimeInMs', 'elementType');
       stmt = _.defaults(properties, {
         url: 'unknown',
@@ -53,10 +53,28 @@ function createStatement (ele) {
 
     case 'ZestAssertion':
       properties = _.pick(ele, 'rootExpression', 'elementType');
+      stmt = properties;
+      break;
+
+    case 'ZestConditional':
+      properties = _.pick(ele,
+                          'rootExpression', 'ifStatements', 'elseStatements',
+                          'elementType');
       stmt = _.defaults(properties, {
-        rootExpression: ele.rootExpression,
-        elementType: ele.elementType
+        ifStatements: [],
+        elseStatements: [],
+        index: ''
       });
+      break;
+
+    case 'ZestActionPrint':
+      properties = _.pick(ele, 'message', 'elementType');
+      stmt = properties;
+      break;
+
+    case 'ZestActionFail':
+      properties = _.pick(ele, 'message', 'priority', 'elementType');
+      stmt = properties;
       break;
 
     default:
