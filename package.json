@@ -9,6 +9,7 @@
   "author": "Sunny <indiasuny000@gmail.com> (darkowlzz)",
   "license": "MPL",
   "dependencies": {
+    "jsonquerylanguage": "^0.91.7",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
