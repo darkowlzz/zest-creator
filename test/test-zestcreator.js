@@ -26,6 +26,12 @@ var sampleRes = {
   subStatementOf: 'response'
 };
 
+var sampleExpressionStatusCode = {
+  code: 200,
+  not: false,
+  elementType: 'ZestExpressionStatusCode'
+};
+
 var sampleCondition = {
   rootExpression: {
     value: 'GET',
@@ -139,16 +145,10 @@ describe('ZC basic testing', function () {
     });
 
     it('should create assertion statement', function () {
-      zc.addStatement({
-        rootExpression: {
-          code: 200,
-          not: false,
-          elementType: 'ZestExpressionStatusCode'
-        },
-        elementType: 'ZestAssertion',
-        subStatementOf: 'assertions',
-        parentIndex: zc.statementCount
-      });
+      var expStatCode = _.clone(sampleExpressionStatusCode);
+      expStatCode.subStatementOf = 'assertions';
+      expStatCode.parentIndex = zc.statementCount;
+      zc.addStatement(expStatCode);
       var stmt = zc.getStatement(zc.statementCount);
       stmt.assertions[0].rootExpression.should.have.properties({
         code: 200,

@@ -34,6 +34,7 @@ function createStatement (ele) {
         method: 'unknown',
         headers: 'unknown',
         response: {},
+        assertions: [],
         followRedirect: false,
         index: ''
       });
@@ -56,6 +57,18 @@ function createStatement (ele) {
     case 'ZestAssertion':
       properties = _.pick(ele, 'rootExpression', 'elementType');
       stmt = properties;
+      break;
+
+    case 'ZestExpressionStatusCode':
+      properties = _.pick(ele, 'code', 'not', 'elementType');
+      stmt = _.defaults(properties, {
+        not: false
+      });
+      var assertion = {
+        rootExpression: stmt,
+        elementType: 'ZestAssertion'
+      };
+      stmt = createStatement(assertion);
       break;
 
     case 'ZestConditional':
