@@ -39,6 +39,12 @@ var sampleExpressionLength = {
   elementType: 'ZestExpressionLength'
 };
 
+var sampleExpressionRegex = {
+  regex: '/^foo/',
+  variableName: 'response.body',
+  elementType: 'ZestExpressionRegex'
+};
+
 var sampleCondition = {
   rootExpression: {
     value: 'GET',
@@ -178,6 +184,21 @@ describe('ZC basic testing', function () {
         variableName: 'request.url',
         not: false,
         elementType: 'ZestExpressionLength'
+      });
+    });
+
+    it('should create ExpressionRegex assertion statement', function () {
+      var expRegex = _.clone(sampleExpressionRegex);
+      expRegex.subStatementOf = 'assertions';
+      expRegex.parentIndex = zc.statementCount;
+      zc.addStatement(expRegex);
+      var stmt = zc.getStatement(zc.statementCount);
+      stmt.assertions[2].rootExpression.should.have.properties({
+        regex: '/^foo/',
+        variableName: 'response.body',
+        caseExact: false,
+        not: false,
+        elementType: 'ZestExpressionRegex'
       });
     });
 

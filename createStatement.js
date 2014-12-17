@@ -86,6 +86,21 @@ function createStatement (ele) {
       stmt = createStatement(assertion);
       break;
 
+    case 'ZestExpressionRegex':
+      properties = _.pick(ele,
+                          'regex', 'variableName', 'caseExact', 'not',
+                          'elementType');
+      stmt = _.defaults(properties, {
+        caseExact: false,
+        not: false
+      });
+      var assertion = {
+        rootExpression: stmt,
+        elementType: 'ZestAssertion'
+      };
+      stmt = createStatement(assertion);
+      break;
+
     case 'ZestConditional':
       properties = _.pick(ele,
                           'rootExpression', 'ifStatements', 'elseStatements',
