@@ -48,6 +48,11 @@ var sampleActionFail = {
   elementType: 'ZestActionFail'
 };
 
+var sampleActionSleep = {
+  milliseconds: 2,
+  elementType: 'ZestActionSleep'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -168,22 +173,53 @@ describe('ZC basic testing', function () {
       actionFail.parentIndex = index;
       zc.addStatement(actionFail);
 
+      var actionSleep = _.clone(sampleActionSleep);
+      actionSleep.subStatementOf = 'ifStatements';
+      actionSleep.parentIndex = index;
+      zc.addStatement(actionSleep);
+
       var expectedIf = {
         message: 'Pass',
         elementType: 'ZestActionPrint',
         index: 5
       };
+      var expectedIf2 = {
+        milliseconds: 2,
+        elementType: 'ZestActionSleep',
+        index: 6
+      };
       var expectedElse = {
         message: 'Fail',
         priority: 'HIGH',
         elementType: 'ZestActionFail',
-        index: 6
+        index: 7
       };
+
       stmt = zc.getStatement(5);
       stmt.should.have.properties(expectedIf);
       stmt = zc.getStatement(6);
+      stmt.should.have.properties(expectedIf2);
+      stmt = zc.getStatement(7);
       stmt.should.have.properties(expectedElse);
-      zc.statementCount.should.be.exactly(6);
+      zc.statementCount.should.be.exactly(7);
+
+      // Add a statement to the end and a sub stmt to the conditional
+      zc.addStatement({ comment: 'again', elementType: 'ZestComment' });
+      actionSleep = _.clone(sampleActionSleep);
+      actionSleep.subStatementOf = 'ifStatements';
+      actionSleep.milliseconds = 5;
+      actionSleep.parentIndex = 4;
+      zc.addStatement(actionSleep);
+
+      expectedIf = {
+        milliseconds: 5,
+        elementType: 'ZestActionSleep',
+        index: 7
+      };
+
+      stmt = zc.getStatement(7);
+      stmt.should.have.properties(expectedIf);
+      zc.statementCount.should.be.exactly(9);
     });
   });
 });
