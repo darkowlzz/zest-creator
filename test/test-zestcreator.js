@@ -32,6 +32,13 @@ var sampleExpressionStatusCode = {
   elementType: 'ZestExpressionStatusCode'
 };
 
+var sampleExpressionLength = {
+  length: 10,
+  approx: 1,
+  variableName: 'request.url',
+  elementType: 'ZestExpressionLength'
+};
+
 var sampleCondition = {
   rootExpression: {
     value: 'GET',
@@ -144,7 +151,7 @@ describe('ZC basic testing', function () {
       zc.statementCount.should.be.exactly(3);
     });
 
-    it('should create assertion statement', function () {
+    it('should create ExpressionStatusCode assertion statement', function () {
       var expStatCode = _.clone(sampleExpressionStatusCode);
       expStatCode.subStatementOf = 'assertions';
       expStatCode.parentIndex = zc.statementCount;
@@ -157,6 +164,21 @@ describe('ZC basic testing', function () {
       });
       stmt.assertions[0].should.have.property('elementType', 'ZestAssertion');
       zc.statementCount.should.be.exactly(3);
+    });
+
+    it('should create ExpressionLength assertion statement', function () {
+      var expLength = _.clone(sampleExpressionLength);
+      expLength.subStatementOf = 'assertions';
+      expLength.parentIndex = zc.statementCount;
+      zc.addStatement(expLength);
+      var stmt = zc.getStatement(zc.statementCount);
+      stmt.assertions[1].rootExpression.should.have.properties({
+        length: 10,
+        approx: 1,
+        variableName: 'request.url',
+        not: false,
+        elementType: 'ZestExpressionLength'
+      });
     });
 
     it('should create conditional statement', function () {
@@ -222,6 +244,7 @@ describe('ZC basic testing', function () {
       stmt = zc.getStatement(7);
       stmt.should.have.properties(expectedIf);
       zc.statementCount.should.be.exactly(9);
+      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
 });
