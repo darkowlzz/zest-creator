@@ -2,6 +2,7 @@ module.exports = ZestCreator;
 
 var createStatement = require('./createStatement'),
     addToStatement  = require('./addToStatement'),
+    helper          = require('./helper'),
     _               = require('underscore'),
     JQL             = require('jsonquerylanguage'),
     jql             = new JQL(),
@@ -49,13 +50,79 @@ ZestCreator.prototype = {
     var stmt = createStatement(ele);
     if (_.has(ele, 'subStatementOf')) {
       if ((stmt.elementType == 'ZestActionPrint') || 
-          (stmt.elementType == 'ZestActionFail')) {
-        stmt.index = ++this.stmtIndex;
+          (stmt.elementType == 'ZestActionFail') ||
+          (stmt.elementType == 'ZestActionSleep')){
+        stmt.index = this._makeSpace(ele);
       }
       addToStatement(stmt, ele, this.statements);
     } else if (!! stmt) {
       stmt.index = ++this.stmtIndex;
       this.statements.push(stmt);
+    }
+  },
+
+  /**
+   * Create space for new element by moving the statements down (increment
+   * index values).
+   * Algo: Check if the given element is a sub stmt or a parent stmt. If
+   * substmt, compare the parent's index and total number of stmts. On equality
+   * increment the stmtIndex and return it as the target position. On
+   * inequality, check if parent the parent is 'ZestConditional' or
+   * 'ZestLoop*' and rearrange the index number of substmts as per the type of
+   * parent. If an space is to be created anywhere other than the end, move the
+   * following stmts my incrementing the index values of those stmts.
+   * Any improvement in this description is encouraged.
+   *
+   * @param (object) ele
+   *    statement to be added to zest with raw details about
+   *    its position.
+   *
+   * @return (number) targetIndex
+   *    index value of the target position.
+   */
+  _makeSpace: function (ele) {
+    if (_.has(ele, 'subStatementOf')) {
+      if (ele.parentIndex === this.statementCount) {
+        return ++this.stmtIndex;
+      } else if (ele.parentIndex < this.statementCount) {
+        var parent = this.getStatement(ele.parentIndex);
+        var lastStmt, targetIndex;
+
+        if (parent.elementType == 'ZestConditional') {
+          if (ele.subStatementOf == 'ifStatements') {
+            lastStmt = _.last(parent.ifStatements);
+            if (!! lastStmt) {
+              targetIndex = lastStmt.index + 1;
+            } else {
+              targetIndex = parent.index + 1;
+            }
+          } else if (ele.subStatementOf == 'elseStatements') {
+            lastStmt = _.last(parent.elseStatements);
+            if (!! lastStmt) {
+              targetIndex = lastStmt.index + 1;
+            } else {
+              if (! _.isEmpty(parent.ifStatements)) {
+                targetIndex = _.last(parent.ifStatements).index + 1;
+              } else {
+                targetIndex = parent.index + 1;
+              }
+            }
+          }
+        } else if (parent.elementType.indexOf('ZestLoop') > -1) {
+          // to be implemented later
+        }
+        var nextCounter = 0;
+        var postStmts = [];
+        // collect all the following stmts and increment index value
+        for (var i = targetIndex; i <= this.statementCount; i++) {
+          postStmts.push(this.getStatement(i));
+        }
+        postStmts.forEach(function (item) {
+          item.index++;
+        });
+        ++this.stmtIndex;
+        return targetIndex;
+      }
     }
   },
 
@@ -88,9 +155,7 @@ ZestCreator.prototype = {
    * @return {object} - requested statement object.
    */
   getStatement: function (index) {
-    var result = jql.searchAndGetValues(this.statements,
-                                        '~[?(@.index == ' + index + ' )]');
-    return result[0];
+    return helper.getStatement(index, this.statements);
   },
 
   log: function (message, args) {

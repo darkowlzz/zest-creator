@@ -77,6 +77,11 @@ function createStatement (ele) {
       stmt = properties;
       break;
 
+    case 'ZestActionSleep':
+      properties = _.pick(ele, 'milliseconds', 'elementType');
+      stmt = properties;
+      break;
+
     default:
       stmt = null;
   }

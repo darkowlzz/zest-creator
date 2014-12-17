@@ -1,7 +1,7 @@
 module.exports = addToStatement;
 
-var _ = require('underscore');
-
+var helper = require('./helper'),
+    _      = require('underscore');
 
 /**
  * Add a given statement to a parent statement.
@@ -11,7 +11,7 @@ var _ = require('underscore');
  * @param {array} stmts - An array of statements present in ZC.
  */
 function addToStatement (stmt, ele, stmts) {
-  var parent = stmts[ele.parentIndex - 1];
+  var parent = helper.getStatement(ele.parentIndex, stmts);
 
   switch (stmt.elementType) {
     case 'ZestResponse':
@@ -33,6 +33,13 @@ function addToStatement (stmt, ele, stmts) {
       break;
 
     case 'ZestActionFail':
+      if (! _.has(parent, ele.subStatementOf)) {
+        parent[ele.subStatementOf] = [];
+      }
+      parent[ele.subStatementOf].push(stmt);
+      break;
+
+    case 'ZestActionSleep':
       if (! _.has(parent, ele.subStatementOf)) {
         parent[ele.subStatementOf] = [];
       }
