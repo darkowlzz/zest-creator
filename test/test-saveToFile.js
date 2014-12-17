@@ -1,3 +1,5 @@
+'use strict';
+
 var ZestCreator = require('../'),
     should      = require('should'),
     fs          = require('fs');

@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = createStatement;
 
 var _ = require('underscore');

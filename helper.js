@@ -1,3 +1,5 @@
+'use strict';
+
 var JQL = require('jsonquerylanguage'),
     jql = new JQL();
 

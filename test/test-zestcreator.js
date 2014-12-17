@@ -1,3 +1,5 @@
+'use strict';
+
 var ZestCreator = require('../'),
     should = require('should'),
     _      = require('underscore');
@@ -13,7 +15,7 @@ var sampleReq = {
   url: 'http://foo.com',
   method: 'GET',
   elementType: 'ZestRequest'
-}
+};
 
 var sampleRes = {
   url: 'http://bar.com',
@@ -22,7 +24,7 @@ var sampleRes = {
   responseTimeInMs: 222,
   elementType: 'ZestResponse',
   subStatementOf: 'response'
-}
+};
 
 var sampleCondition = {
   rootExpression: {
@@ -35,7 +37,7 @@ var sampleCondition = {
   ifStatements: [],
   elseStatements: [],
   elementType: 'ZestConditional'
-}
+};
 
 var sampleActionPrint = {
   message: 'Pass',

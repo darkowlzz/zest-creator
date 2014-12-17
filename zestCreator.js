@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = ZestCreator;
 
 var createStatement = require('./createStatement'),
@@ -21,7 +23,7 @@ var ZEST_VERSION = "1.0";
  *    and `debug`.
  */
 function ZestCreator (opts) {
-  var opts = opts || {};
+  opts = opts || {};
   this.config = _.defaults(opts, {
     about: 'About text',
     title: 'Unnamed Zest script',
@@ -170,10 +172,10 @@ ZestCreator.prototype = {
    * @param {string} [optional] filename - Name of the file.
    */
   saveToFile: function (filename) {
-    var filename = filename || 'newzest.zst',
-        z        = this.getZest(),
-        text     = JSON.stringify(z, undefined, 2),
-        regex    = new RegExp('.zst$');
+    filename = filename || 'newzest.zst';
+    var z     = this.getZest(),
+        text  = JSON.stringify(z, undefined, 2),
+        regex = new RegExp('.zst$');
     filename = regex.test(filename) ? filename : (filename + '.zst');
     fs.writeFileSync(filename, text);
   }

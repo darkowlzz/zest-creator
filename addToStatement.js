@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = addToStatement;
 
 var helper = require('./helper'),
