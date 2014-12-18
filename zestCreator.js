@@ -137,6 +137,12 @@ ZestCreator.prototype = {
       description: this.config.description,
       author: this.config.author,
       generatedBy: this.config.client,
+      parameters: {
+        tokenStart: "{{",
+        tokenEnd: "}}",
+        tokens: {},
+        elementType: 'ZestVariables'
+      },
       statements: this.statements,
       authentication: [],
       index: this.index,
