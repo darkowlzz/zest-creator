@@ -265,7 +265,56 @@ describe('ZC basic testing', function () {
       stmt = zc.getStatement(7);
       stmt.should.have.properties(expectedIf);
       zc.statementCount.should.be.exactly(9);
-      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
+    });
+
+    it('should create status code conditional stmt', function () {
+      zc.addStatement(sampleExpressionStatusCode);
+      var stmt = zc.getStatement(10);
+      stmt.rootExpression.should.have.properties({
+        code: 200,
+        not: false,
+        elementType: 'ZestExpressionStatusCode'
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 10
+      });
+      zc.statementCount.should.be.exactly(10);
+    });
+
+    it('should create expression length conditional stmt', function () {
+      zc.addStatement(sampleExpressionLength);
+      var stmt = zc.getStatement(11);
+      stmt.rootExpression.should.have.properties({
+        length: 10,
+        approx: 1,
+        variableName: 'request.url',
+        elementType: 'ZestExpressionLength',
+        not: false
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 11
+      });
+      zc.statementCount.should.be.exactly(11);
+    });
+
+    it('should create regex conditional stmt', function () {
+      zc.addStatement(sampleExpressionRegex);
+      var stmt = zc.getStatement(12);
+      stmt.rootExpression.should.have.properties({
+        regex: '/^foo/',
+        variableName: 'response.body',
+        elementType: 'ZestExpressionRegex',
+        caseExact: false,
+        not: false
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 12
+      });
+      zc.statementCount.should.be.exactly(12);
+      console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
 });

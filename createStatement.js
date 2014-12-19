@@ -64,11 +64,19 @@ function createStatement (ele) {
       stmt = _.defaults(properties, {
         not: false
       });
-      var assertion = {
-        rootExpression: stmt,
-        elementType: 'ZestAssertion'
-      };
-      stmt = createStatement(assertion);
+      if (ele.subStatementOf == 'assertions') {
+        var assertion = {
+          rootExpression: stmt,
+          elementType: 'ZestAssertion'
+        };
+        stmt = createStatement(assertion);
+      } else {
+        var condition = {
+          rootExpression: stmt,
+          elementType: 'ZestConditional'
+        };
+        stmt = createStatement(condition);
+      }
       break;
 
     case 'ZestExpressionLength':
@@ -79,11 +87,19 @@ function createStatement (ele) {
         approx: 1,
         not: false
       });
-      var assertion = {
-        rootExpression: stmt,
-        elementType: 'ZestAssertion'
-      };
-      stmt = createStatement(assertion);
+      if (ele.subStatementOf == 'assertions') {
+        var assertion = {
+          rootExpression: stmt,
+          elementType: 'ZestAssertion'
+        };
+        stmt = createStatement(assertion);
+      } else {
+        var condition = {
+          rootExpression: stmt,
+          elementType: 'ZestConditional'
+        };
+        stmt = createStatement(condition);
+      }
       break;
 
     case 'ZestExpressionRegex':
@@ -94,11 +110,19 @@ function createStatement (ele) {
         caseExact: false,
         not: false
       });
-      var assertion = {
-        rootExpression: stmt,
-        elementType: 'ZestAssertion'
-      };
-      stmt = createStatement(assertion);
+      if (ele.subStatementOf == 'assertions') {
+        var assertion = {
+          rootExpression: stmt,
+          elementType: 'ZestAssertion'
+        };
+        stmt = createStatement(assertion);
+      } else {
+         var condition = {
+          rootExpression: stmt,
+          elementType: 'ZestConditional'
+        };
+        stmt = createStatement(condition);
+      }
       break;
 
     case 'ZestConditional':
