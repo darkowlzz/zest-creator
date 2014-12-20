@@ -314,7 +314,7 @@ describe('ZC basic testing', function () {
         index: 12
       });
       zc.statementCount.should.be.exactly(12);
-      console.log(JSON.stringify(zc.getZest(), undefined, 2));
+      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
 });

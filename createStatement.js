@@ -64,19 +64,7 @@ function createStatement (ele) {
       stmt = _.defaults(properties, {
         not: false
       });
-      if (ele.subStatementOf == 'assertions') {
-        var assertion = {
-          rootExpression: stmt,
-          elementType: 'ZestAssertion'
-        };
-        stmt = createStatement(assertion);
-      } else {
-        var condition = {
-          rootExpression: stmt,
-          elementType: 'ZestConditional'
-        };
-        stmt = createStatement(condition);
-      }
+      stmt = createExpressions(stmt, ele);
       break;
 
     case 'ZestExpressionLength':
@@ -87,19 +75,7 @@ function createStatement (ele) {
         approx: 1,
         not: false
       });
-      if (ele.subStatementOf == 'assertions') {
-        var assertion = {
-          rootExpression: stmt,
-          elementType: 'ZestAssertion'
-        };
-        stmt = createStatement(assertion);
-      } else {
-        var condition = {
-          rootExpression: stmt,
-          elementType: 'ZestConditional'
-        };
-        stmt = createStatement(condition);
-      }
+      stmt = createExpressions(stmt, ele);
       break;
 
     case 'ZestExpressionRegex':
@@ -110,19 +86,7 @@ function createStatement (ele) {
         caseExact: false,
         not: false
       });
-      if (ele.subStatementOf == 'assertions') {
-        var assertion = {
-          rootExpression: stmt,
-          elementType: 'ZestAssertion'
-        };
-        stmt = createStatement(assertion);
-      } else {
-         var condition = {
-          rootExpression: stmt,
-          elementType: 'ZestConditional'
-        };
-        stmt = createStatement(condition);
-      }
+      stmt = createExpressions(stmt, ele);
       break;
 
     case 'ZestConditional':
@@ -157,3 +121,28 @@ function createStatement (ele) {
 
   return stmt;
 }
+
+/**
+ * Create expressions for assertions or conditionals.
+ *
+ * @param {object} stmt - rootExpression object.
+ * @param {object} ele - raw data of the expression to be created.
+ *
+ * @return {object} stmt - an statement with expression within it.
+ */
+function createExpressions (stmt, ele) {
+  if (ele.subStatementOf === 'assertions') {
+    var assertion = {
+      rootExpression: stmt,
+      elementType: 'ZestAssertion'
+    };
+    stmt = createStatement(assertion);
+  } else {
+    var condition = {
+      rootExpression: stmt,
+      elementType: 'ZestConditional'
+    };
+    stmt = createStatement(condition);
+  }
+  return stmt;
+};
