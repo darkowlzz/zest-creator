@@ -45,6 +45,18 @@ var sampleExpressionRegex = {
   elementType: 'ZestExpressionRegex'
 };
 
+var sampleExpressionURL = {
+  includeRegexes: '/.com$/',
+  excludeRegexes: '/.net$/',
+  elementType: 'ZestExpressionURL'
+};
+
+var sampleExpressionEquals = {
+  value: 'GET',
+  variableName: 'request.method',
+  elementType: 'ZestExpressionEquals'
+};
+
 var sampleCondition = {
   rootExpression: {
     value: 'GET',
@@ -325,7 +337,42 @@ describe('ZC basic testing', function () {
         enabled: true
       });
       zc.statementCount.should.be.exactly(12);
-      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
+
+    it('should create conditional ExpressionURL stmt', function () {
+      zc.addStatement(sampleExpressionURL);
+      var stmt = zc.getStatement(13);
+      stmt.rootExpression.should.have.properties({
+        includeRegexes: '/.com$/',
+        excludeRegexes: '/.net$/',
+        not: false,
+        elementType: 'ZestExpressionURL'
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 13,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(13);
+    });
+
+    it('should create conditional ExpressionEquals stmt', function () {
+      zc.addStatement(sampleExpressionEquals);
+      var stmt = zc.getStatement(14);
+      stmt.rootExpression.should.have.properties({
+        value: 'GET',
+        variableName: 'request.method',
+        elementType: 'ZestExpressionEquals',
+        caseExact: false,
+        not: false
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 14,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(14);
+      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
+   });
   });
 });

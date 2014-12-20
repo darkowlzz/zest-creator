@@ -64,7 +64,7 @@ function createStatement (ele) {
       stmt = _.defaults(properties, {
         not: false
       });
-      stmt = createExpressions(stmt, ele);
+      stmt = createExpression(stmt, ele);
       break;
 
     case 'ZestExpressionLength':
@@ -75,7 +75,7 @@ function createStatement (ele) {
         approx: 1,
         not: false
       });
-      stmt = createExpressions(stmt, ele);
+      stmt = createExpression(stmt, ele);
       break;
 
     case 'ZestExpressionRegex':
@@ -86,7 +86,31 @@ function createStatement (ele) {
         caseExact: false,
         not: false
       });
-      stmt = createExpressions(stmt, ele);
+      stmt = createExpression(stmt, ele);
+      break;
+
+    case 'ZestExpressionURL':
+      properties = _.pick(ele,
+                          'includeRegexes', 'excludeRegexes', 'not',
+                          'elementType');
+      stmt = _.defaults(properties, {
+        includeRegexes: [],
+        excludeRegexes: [],
+        not: false
+      });
+      stmt = createExpression(stmt, ele);
+      break;
+
+    case 'ZestExpressionEquals':
+      properties = _.pick(ele,
+                          'value', 'variableName', 'caseExact', 'not',
+                          'elementType');
+      stmt = _.defaults(properties, {
+        value: '',
+        caseExact: false,
+        not: false
+      });
+      stmt = createExpression(stmt, ele);
       break;
 
     case 'ZestConditional':
@@ -130,7 +154,7 @@ function createStatement (ele) {
  *
  * @return {object} stmt - an statement with expression within it.
  */
-function createExpressions (stmt, ele) {
+function createExpression (stmt, ele) {
   if (ele.subStatementOf === 'assertions') {
     var assertion = {
       rootExpression: stmt,
