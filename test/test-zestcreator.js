@@ -106,7 +106,8 @@ describe('ZC basic testing', function () {
         description: 'a little zest script',
         author: 'mocha',
         generatedBy: 'test client',
-        index: 1,
+        index: 0,
+        enabled: true,
         elementType: 'ZestScript'
       });
       zc.statementCount.should.be.exactly(0);
@@ -121,12 +122,14 @@ describe('ZC basic testing', function () {
       stmt1.should.have.properties({
         comment: 'A comment',
         index: 1,
+        enabled: true,
         elementType: 'ZestComment'
       });
       var stmt2 = zc.getStatement(2);
       stmt2.should.have.properties({
         comment: 'another one',
         index: 2,
+        enabled: true,
         elementType: 'ZestComment'
       });
       zc.statementCount.should.be.exactly(2);
@@ -145,6 +148,7 @@ describe('ZC basic testing', function () {
         method: 'GET',
         headers: 'unknown',
         index: 3,
+        enabled: true,
         elementType: 'ZestRequest'
       });
       stmt.response.should.have.properties({
@@ -226,18 +230,21 @@ describe('ZC basic testing', function () {
       var expectedIf = {
         message: 'Pass',
         elementType: 'ZestActionPrint',
-        index: 5
+        index: 5,
+        enabled: true
       };
       var expectedIf2 = {
         milliseconds: 2,
         elementType: 'ZestActionSleep',
-        index: 6
+        index: 6,
+        enabled: true
       };
       var expectedElse = {
         message: 'Fail',
         priority: 'HIGH',
         elementType: 'ZestActionFail',
-        index: 7
+        index: 7,
+        enabled: true
       };
 
       stmt = zc.getStatement(5);
@@ -259,7 +266,8 @@ describe('ZC basic testing', function () {
       expectedIf = {
         milliseconds: 5,
         elementType: 'ZestActionSleep',
-        index: 7
+        index: 7,
+        enabled: true
       };
 
       stmt = zc.getStatement(7);
@@ -277,7 +285,8 @@ describe('ZC basic testing', function () {
       });
       stmt.should.have.properties({
         elementType: 'ZestConditional',
-        index: 10
+        index: 10,
+        enabled: true
       });
       zc.statementCount.should.be.exactly(10);
     });
@@ -294,7 +303,8 @@ describe('ZC basic testing', function () {
       });
       stmt.should.have.properties({
         elementType: 'ZestConditional',
-        index: 11
+        index: 11,
+        enabled: true
       });
       zc.statementCount.should.be.exactly(11);
     });
@@ -311,7 +321,8 @@ describe('ZC basic testing', function () {
       });
       stmt.should.have.properties({
         elementType: 'ZestConditional',
-        index: 12
+        index: 12,
+        enabled: true
       });
       zc.statementCount.should.be.exactly(12);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));

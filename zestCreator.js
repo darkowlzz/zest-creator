@@ -34,7 +34,7 @@ function ZestCreator (opts) {
     debug: DEBUG
   });
 
-  this.index = 1;  // script index
+  this.index = 0;  // script index
   this.stmtIndex = 0;  // statement index
   this.statements = [];
 }
@@ -55,10 +55,12 @@ ZestCreator.prototype = {
           (stmt.elementType == 'ZestActionFail') ||
           (stmt.elementType == 'ZestActionSleep')){
         stmt.index = this._makeSpace(ele);
+        stmt.enabled = true;
       }
       addToStatement(stmt, ele, this.statements);
     } else if (!! stmt) {
       stmt.index = ++this.stmtIndex;
+      stmt.enabled = true;
       this.statements.push(stmt);
     }
   },
@@ -146,6 +148,7 @@ ZestCreator.prototype = {
       statements: this.statements,
       authentication: [],
       index: this.index,
+      enabled: true,
       elementType: 'ZestScript'
     };
   },
