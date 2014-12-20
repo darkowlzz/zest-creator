@@ -57,6 +57,11 @@ var sampleExpressionEquals = {
   elementType: 'ZestExpressionEquals'
 };
 
+var sampleExpressionResponseTime = {
+  timeInMs: 5,
+  elementType: 'ZestExpressionResponseTime'
+};
+
 var sampleCondition = {
   rootExpression: {
     value: 'GET',
@@ -84,6 +89,19 @@ var sampleActionFail = {
 var sampleActionSleep = {
   milliseconds: 2,
   elementType: 'ZestActionSleep'
+};
+
+var sampleAssignString = {
+  string: 'Mr. Zest',
+  variableName: 'name',
+  elementType: 'ZestAssignString'
+};
+
+var sampleAssignRandomInteger = {
+  minInt: 5,
+  maxInt: 15,
+  variableName: 'var1',
+  elementType: 'ZestAssignRandomInteger'
 };
 
 
@@ -372,7 +390,51 @@ describe('ZC basic testing', function () {
         enabled: true
       });
       zc.statementCount.should.be.exactly(14);
+    });
+
+    it('should create conditional ExpressionResponseTime', function () {
+      zc.addStatement(sampleExpressionResponseTime);
+      var stmt = zc.getStatement(15);
+      stmt.rootExpression.should.have.properties({
+        timeInMs: 5,
+        greaterThan: true,
+        not: false,
+        elementType: 'ZestExpressionResponseTime'
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 15,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(15);
+    });
+
+    it('should create AssignString stmt', function () {
+      zc.addStatement(sampleAssignString);
+      var stmt = zc.getStatement(16);
+      stmt.should.have.properties({
+        string: 'Mr. Zest',
+        variableName: 'name',
+        elementType: 'ZestAssignString',
+        index: 16,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(16);
+    });
+
+    it('should create AssignRandomInteger stmt', function () {
+      zc.addStatement(sampleAssignRandomInteger);
+      var stmt = zc.getStatement(17);
+      stmt.should.have.properties({
+        minInt: 5,
+        maxInt: 15,
+        variableName: 'var1',
+        elementType: 'ZestAssignRandomInteger',
+        index: 17,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(17);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
-   });
+    });
   });
 });

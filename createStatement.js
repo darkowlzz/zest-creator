@@ -113,6 +113,16 @@ function createStatement (ele) {
       stmt = createExpression(stmt, ele);
       break;
 
+    case 'ZestExpressionResponseTime':
+      properties = _.pick(ele,
+                          'greaterThan', 'timeInMs', 'not', 'elementType');
+      stmt = _.defaults(properties, {
+        greaterThan: true,
+        not: false
+      });
+      stmt = createExpression(stmt, ele);
+      break;
+
     case 'ZestConditional':
       properties = _.pick(ele,
                           'rootExpression', 'ifStatements', 'elseStatements',
@@ -137,6 +147,21 @@ function createStatement (ele) {
     case 'ZestActionSleep':
       properties = _.pick(ele, 'milliseconds', 'elementType');
       stmt = properties;
+      break;
+
+    case 'ZestAssignString':
+      properties = _.pick(ele,
+                          'string', 'variableName', 'elementType');
+      stmt = properties;
+      break;
+
+    case 'ZestAssignRandomInteger':
+      properties = _.pick(ele,
+                          'minInt', 'maxInt', 'variableName', 'elementType');
+      stmt = _.defaults(properties, {
+        minInt: 0,
+        maxInt: 10000
+      });
       break;
 
     default:
