@@ -172,6 +172,31 @@ function createStatement (ele) {
       stmt = _.pick(ele, 'fieldDefinition', 'variableName', 'elementType');
       break;
 
+    case 'ZestAssignReplace':
+      properties = _.pick(ele,
+                          'replace', 'replacement', 'regex', 'caseExact',
+                          'variableName', 'elementType');
+      stmt = _.defaults(properties, {
+        replace: '',
+        replacement: '',
+        regex: false,
+        caseExact: false,
+        variableName: ''
+      });
+      break;
+
+    case 'ZestAssignStringDelimiters':
+      stmt = _.pick(ele,
+                    'prefix', 'postfix', 'location', 'variableName',
+                    'elementType');
+      break;
+
+    case 'ZestAssignRegexDelimiters':
+      stmt = _.pick(ele,
+                    'prefix', 'postfix', 'location', 'variableName',
+                    'elementType');
+      break;
+
     default:
       stmt = null;
   }
