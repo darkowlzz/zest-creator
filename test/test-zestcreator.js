@@ -133,6 +133,11 @@ var sampleAssignRegexDelimiters = {
   elementType: 'ZestAssignRegexDelimiters'
 };
 
+var sampleLoopTokenStringSet = {
+  tokens: ['22', 'foo', 'bar'],
+  elementType: 'ZestLoopTokenStringSet'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -528,6 +533,23 @@ describe('ZC basic testing', function () {
         elementType: 'ZestAssignRegexDelimiters'
       });
       zc.statementCount.should.be.exactly(21);
+    });
+
+    it('should create ZestLoopString stmt', function () {
+      var stringSet = _.clone(sampleLoopTokenStringSet);
+      stringSet.variableName = 'gg';
+      zc.addStatement(stringSet);
+      var stmt = zc.getStatement(22);
+      stmt.set.should.have.properties({
+        tokens: ['22', 'foo', 'bar'],
+        elementType: 'ZestLoopTokenStringSet'
+      });
+      stmt.should.have.properties({
+        statements: [],
+        variableName: 'gg',
+        elementType: 'ZestLoopString'
+      });
+      zc.statementCount.should.be.exactly(22);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
