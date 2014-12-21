@@ -104,6 +104,12 @@ var sampleAssignRandomInteger = {
   elementType: 'ZestAssignRandomInteger'
 };
 
+var sampleFieldDefinition = {
+  formIndex: 0,
+  fieldName: 'roll',
+  elementType: 'ZestFieldDefinition'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -434,6 +440,25 @@ describe('ZC basic testing', function () {
         enabled: true
       });
       zc.statementCount.should.be.exactly(17);
+    });
+
+    it('should create AssignFieldValue stmt', function () {
+      var fieldDefinition = _.clone(sampleFieldDefinition);
+      fieldDefinition.variableName = 'rr';
+      zc.addStatement(fieldDefinition);
+      var stmt = zc.getStatement(18);
+      stmt.fieldDefinition.should.have.properties({
+        formIndex: 0,
+        fieldName: 'roll',
+        elementType: 'ZestFieldDefinition'
+      });
+      stmt.should.have.properties({
+        variableName: 'rr',
+        index: 18,
+        enabled: true,
+        elementType: 'ZestAssignFieldValue'
+      });
+      zc.statementCount.should.be.exactly(18);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });

@@ -55,8 +55,7 @@ function createStatement (ele) {
       break;
 
     case 'ZestAssertion':
-      properties = _.pick(ele, 'rootExpression', 'elementType');
-      stmt = properties;
+      stmt = _.pick(ele, 'rootExpression', 'elementType');
       break;
 
     case 'ZestExpressionStatusCode':
@@ -135,24 +134,19 @@ function createStatement (ele) {
       break;
 
     case 'ZestActionPrint':
-      properties = _.pick(ele, 'message', 'elementType');
-      stmt = properties;
+      stmt = _.pick(ele, 'message', 'elementType');
       break;
 
     case 'ZestActionFail':
-      properties = _.pick(ele, 'message', 'priority', 'elementType');
-      stmt = properties;
+      stmt = _.pick(ele, 'message', 'priority', 'elementType');
       break;
 
     case 'ZestActionSleep':
-      properties = _.pick(ele, 'milliseconds', 'elementType');
-      stmt = properties;
+      stmt = _.pick(ele, 'milliseconds', 'elementType');
       break;
 
     case 'ZestAssignString':
-      properties = _.pick(ele,
-                          'string', 'variableName', 'elementType');
-      stmt = properties;
+      stmt = _.pick(ele, 'string', 'variableName', 'elementType');
       break;
 
     case 'ZestAssignRandomInteger':
@@ -162,6 +156,20 @@ function createStatement (ele) {
         minInt: 0,
         maxInt: 10000
       });
+      break;
+
+    case 'ZestFieldDefinition':
+      properties = _.pick(ele, 'formIndex', 'fieldName', 'elementType');
+      var field = {
+        fieldDefinition: properties,
+        variableName: ele.variableName,
+        elementType: 'ZestAssignFieldValue'
+      };
+      stmt = createStatement(field);
+      break;
+
+    case 'ZestAssignFieldValue':
+      stmt = _.pick(ele, 'fieldDefinition', 'variableName', 'elementType');
       break;
 
     default:
