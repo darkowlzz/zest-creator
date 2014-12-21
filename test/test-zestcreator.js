@@ -110,6 +110,29 @@ var sampleFieldDefinition = {
   elementType: 'ZestFieldDefinition'
 };
 
+var sampleAssignReplace = {
+  replace: 'name',
+  replacement: 'face',
+  variableName: 'name',
+  elementType: 'ZestAssignReplace'
+};
+
+var sampleAssignStringDelimiters = {
+  prefix: 'tt',
+  postfix: 'cc',
+  location: 'HEAD',
+  variableName: 'bb',
+  elementType: 'ZestAssignStringDelimiters'
+};
+
+var sampleAssignRegexDelimiters = {
+  prefix: 'gg',
+  postfix: 'zz',
+  location: 'HEAD',
+  variableName: 'dd',
+  elementType: 'ZestAssignRegexDelimiters'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -459,6 +482,52 @@ describe('ZC basic testing', function () {
         elementType: 'ZestAssignFieldValue'
       });
       zc.statementCount.should.be.exactly(18);
+    });
+
+    it('should create AssignReplace stmt', function () {
+      zc.addStatement(sampleAssignReplace);
+      var stmt = zc.getStatement(19);
+      stmt.should.have.properties({
+        replace: 'name',
+        replacement: 'face',
+        variableName: 'name',
+        regex: false,
+        caseExact: false,
+        index: 19,
+        enabled: true,
+        elementType: 'ZestAssignReplace'
+      });
+      zc.statementCount.should.be.exactly(19);
+    });
+
+    it('should create AssignStringDelimiters stmt', function () {
+      zc.addStatement(sampleAssignStringDelimiters);
+      var stmt = zc.getStatement(20);
+      stmt.should.have.properties({
+        prefix: 'tt',
+        postfix: 'cc',
+        location: 'HEAD',
+        variableName: 'bb',
+        index: 20,
+        enabled: true,
+        elementType: 'ZestAssignStringDelimiters'
+      });
+      zc.statementCount.should.be.exactly(20);
+    });
+
+    it('should create AssignRegexDelimiters stmt', function () {
+      zc.addStatement(sampleAssignRegexDelimiters);
+      var stmt = zc.getStatement(21);
+      stmt.should.have.properties({
+        prefix: 'gg',
+        postfix: 'zz',
+        location: 'HEAD',
+        variableName: 'dd',
+        index: 21,
+        enabled: true,
+        elementType: 'ZestAssignRegexDelimiters'
+      });
+      zc.statementCount.should.be.exactly(21);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
