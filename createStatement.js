@@ -197,6 +197,22 @@ function createStatement (ele) {
                     'elementType');
       break;
 
+    case 'ZestLoopTokenStringSet':
+      properties = _.pick(ele, 'tokens', 'elementType');
+      var loopString = {
+        set: properties,
+        statements: [],
+        variableName: ele.variableName,
+        elementType: 'ZestLoopString'
+      };
+      stmt = createStatement(loopString);
+      break;
+
+    case 'ZestLoopString':
+      stmt = _.pick(ele,
+                    'set', 'statements', 'variableName', 'elementType');
+      break;
+
     default:
       stmt = null;
   }
