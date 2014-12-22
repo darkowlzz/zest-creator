@@ -550,6 +550,21 @@ describe('ZC basic testing', function () {
         elementType: 'ZestLoopString'
       });
       zc.statementCount.should.be.exactly(22);
+    });
+
+    it('should add statements to ZestLoopString', function () {
+      var aComment = { comment: 'A comment', elementType: 'ZestComment' };
+      aComment.subStatementOf = 'statements';
+      aComment.parentIndex = zc.statementCount;
+      zc.addStatement(aComment);
+      var stmt = zc.getStatement(23);
+      stmt.should.have.properties({
+        comment: 'A comment',
+        elementType: 'ZestComment',
+        index: 23,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(23);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });

@@ -48,6 +48,13 @@ function addToStatement (stmt, ele, stmts) {
       parent[ele.subStatementOf].push(stmt);
       break;
 
+    case 'ZestComment':
+      if (! _.has(parent, ele.subStatementOf)) {
+        parent[ele.subStatementOf] = [];
+      }
+      parent[ele.subStatementOf].push(stmt);
+      break;
+
     default:
 
   }

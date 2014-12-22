@@ -51,9 +51,7 @@ ZestCreator.prototype = {
   addStatement: function (ele) {
     var stmt = createStatement(ele);
     if (_.has(ele, 'subStatementOf')) {
-      if ((stmt.elementType == 'ZestActionPrint') || 
-          (stmt.elementType == 'ZestActionFail') ||
-          (stmt.elementType == 'ZestActionSleep')){
+      if (!! helper.ZestStatement.get(stmt.elementType)) {
         stmt.index = this._makeSpace(ele);
         stmt.enabled = true;
       }
