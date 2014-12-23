@@ -20,42 +20,11 @@ function addToStatement (stmt, ele, stmts) {
       parent[ele.subStatementOf] = stmt;
       break;
 
-    case 'ZestAssertion':
-      if (! _.has(parent, ele.subStatementOf)) {
-        parent[ele.subStatementOf] = [];
-      }
-      parent[ele.subStatementOf].push(stmt);
-      break;
-
-    case 'ZestActionPrint':
-      if (! _.has(parent, ele.subStatementOf)) {
-        parent[ele.subStatementOf] = [];
-      }
-      parent[ele.subStatementOf].push(stmt);
-      break;
-
-    case 'ZestActionFail':
-      if (! _.has(parent, ele.subStatementOf)) {
-        parent[ele.subStatementOf] = [];
-      }
-      parent[ele.subStatementOf].push(stmt);
-      break;
-
-    case 'ZestActionSleep':
-      if (! _.has(parent, ele.subStatementOf)) {
-        parent[ele.subStatementOf] = [];
-      }
-      parent[ele.subStatementOf].push(stmt);
-      break;
-
-    case 'ZestComment':
-      if (! _.has(parent, ele.subStatementOf)) {
-        parent[ele.subStatementOf] = [];
-      }
-      parent[ele.subStatementOf].push(stmt);
-      break;
-
     default:
+      if (! _.has(parent, ele.subStatementOf)) {
+        parent[ele.subStatementOf] = [];
+      }
+      parent[ele.subStatementOf].push(stmt);
 
   }
 }

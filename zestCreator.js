@@ -111,7 +111,12 @@ ZestCreator.prototype = {
             }
           }
         } else if (parent.elementType.indexOf('ZestLoop') > -1) {
-          // to be implemented later
+          lastStmt = _.last(parent.statements);
+          if (!! lastStmt) {
+            targetIndex = lastStmt.index + 1;
+          } else {
+            targetIndex = parent.index + 1;
+          }
         }
         var nextCounter = 0;
         var postStmts = [];
