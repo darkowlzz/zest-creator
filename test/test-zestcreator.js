@@ -555,7 +555,8 @@ describe('ZC basic testing', function () {
     it('should add statements to ZestLoopString', function () {
       var aComment = { comment: 'A comment', elementType: 'ZestComment' };
       aComment.subStatementOf = 'statements';
-      aComment.parentIndex = zc.statementCount;
+      var index = zc.statementCount;
+      aComment.parentIndex = index;
       zc.addStatement(aComment);
       var stmt = zc.getStatement(23);
       stmt.should.have.properties({
@@ -565,6 +566,61 @@ describe('ZC basic testing', function () {
         enabled: true
       });
       zc.statementCount.should.be.exactly(23);
+
+      // Add a ZestActionPrint stmt
+      var actionPrint = _.clone(sampleActionPrint);
+      actionPrint.subStatementOf = 'statements';
+      actionPrint.parentIndex = index;
+      zc.addStatement(actionPrint);
+      stmt = zc.getStatement(24);
+      stmt.should.have.properties({
+        message: 'Pass',
+        elementType: 'ZestActionPrint',
+        index: 24,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(24);
+
+      // Add an stmt after the Loop and then add another stmt in loop stmts
+      zc.addStatement({ comment: 'comment', elementType: 'ZestComment'});
+      stmt = zc.getStatement(25);
+      stmt.should.have.properties({
+        comment: 'comment',
+        elementType: 'ZestComment',
+        index: 25,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(25);
+
+      zc.addStatement(aComment);
+      stmt = zc.getStatement(25);
+      stmt.should.have.properties({
+        comment: 'A comment',
+        elementType: 'ZestComment',
+        index: 25,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(26);
+
+      // Add a conditional stmt to loop stmts
+      var expEquals = _.clone(sampleExpressionEquals);
+      expEquals.subStatementOf = 'statements';
+      expEquals.parentIndex = index;
+      zc.addStatement(expEquals);
+      stmt = zc.getStatement(26);
+      stmt.rootExpression.should.have.properties({
+        value: 'GET',
+        variableName: 'request.method',
+        elementType: 'ZestExpressionEquals',
+        caseExact: false,
+        not: false
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 26,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(27);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
