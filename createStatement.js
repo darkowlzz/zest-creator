@@ -213,6 +213,54 @@ function createStatement (ele) {
                     'set', 'statements', 'variableName', 'elementType');
       break;
 
+    case 'ZestLoopTokenFileSet':
+      properties = _.pick(ele, 'pathToFile', 'elementType');
+      var loopFile = {
+        set: properties,
+        statements: [],
+        variableName: ele.variableName,
+        elementType: 'ZestLoopFile'
+      };
+      stmt = createStatement(loopFile);
+      break;
+
+    case 'ZestLoopFile':
+      stmt = _.pick(ele,
+                    'set', 'statements', 'variableName', 'elementType');
+      break;
+
+    case 'ZestLoopTokenIntegerSet':
+      properties = _.pick(ele, 'start', 'end', 'step', 'elementType');
+      var loopInteger = {
+        set: properties,
+        statements: [],
+        variableName: ele.variableName,
+        elementType: 'ZestLoopInteger'
+      };
+      stmt = createStatement(loopInteger);
+      break;
+
+    case 'ZestLoopInteger':
+      stmt = _.pick(ele,
+                    'set', 'statements', 'variableName', 'elementType');
+      break;
+
+    case 'ZestLoopTokenClientElementsSet':
+      properties = _.pick(ele, 'type', 'element', 'elementType');
+      var loopElements = {
+        set: properties,
+        statements: [],
+        variableName: ele.variableName,
+        elementType: 'ZestLoopClientElements'
+      };
+      stmt = createStatement(loopElements);
+      break;
+
+    case 'ZestLoopClientElements':
+      stmt = _.pick(ele,
+                    'set', 'statements', 'variableName', 'elementType');
+      break;
+
     default:
       stmt = null;
   }

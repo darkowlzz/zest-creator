@@ -138,6 +138,24 @@ var sampleLoopTokenStringSet = {
   elementType: 'ZestLoopTokenStringSet'
 };
 
+var sampleLoopTokenFileSet = {
+  pathToFile: '/path/to/fuzzer',
+  elementType: 'ZestLoopTokenFileSet'
+};
+
+var sampleLoopTokenIntegerSet = {
+  start: 10,
+  end: 30,
+  step: 5,
+  elementType: 'ZestLoopTokenIntegerSet'
+};
+
+var sampleLoopTokenClientElementsSet = {
+  type: 'cssselector',
+  element: 'foobar',
+  elementType: 'ZestLoopTokenClientElementsSet'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -621,6 +639,66 @@ describe('ZC basic testing', function () {
         enabled: true
       });
       zc.statementCount.should.be.exactly(27);
+    });
+
+    it('should create ZestLoopFile stmt', function () {
+      var fileSet = _.clone(sampleLoopTokenFileSet);
+      fileSet.variableName = 'var9';
+      zc.addStatement(fileSet);
+      var stmt = zc.getStatement(28);
+      stmt.set.should.have.properties({
+        pathToFile: '/path/to/fuzzer',
+        elementType: 'ZestLoopTokenFileSet'
+      });
+      stmt.should.have.properties({
+        statements: [],
+        variableName: 'var9',
+        index: 28,
+        enabled: true,
+        elementType: 'ZestLoopFile'
+      });
+      zc.statementCount.should.be.exactly(28);
+    });
+
+    it('should create ZestLoopInteger stmt', function () {
+      var integerSet = _.clone(sampleLoopTokenIntegerSet);
+      integerSet.variableName = 'var8';
+      zc.addStatement(integerSet);
+      var stmt = zc.getStatement(29);
+      stmt.set.should.have.properties({
+        start: 10,
+        end: 30,
+        step: 5,
+        elementType: 'ZestLoopTokenIntegerSet'
+      });
+      stmt.should.have.properties({
+        statements: [],
+        variableName: 'var8',
+        index: 29,
+        enabled: true,
+        elementType: 'ZestLoopInteger'
+      });
+      zc.statementCount.should.be.exactly(29);
+    });
+
+    it('should create ZestLoopClientElements', function () {
+      var elementsSet = _.clone(sampleLoopTokenClientElementsSet);
+      elementsSet.variableName = 'var7';
+      zc.addStatement(elementsSet);
+      var stmt = zc.getStatement(30);
+      stmt.set.should.have.properties({
+        type: 'cssselector',
+        element: 'foobar',
+        elementType: 'ZestLoopTokenClientElementsSet'
+      });
+      stmt.should.have.properties({
+        statements: [],
+        variableName: 'var7',
+        index: 30,
+        enabled: true,
+        elementType: 'ZestLoopClientElements'
+      });
+      zc.statementCount.should.be.exactly(30);
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
