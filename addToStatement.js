@@ -3,7 +3,7 @@
 module.exports = addToStatement;
 
 var helper = require('./helper'),
-    _      = require('underscore');
+    _      = require('lodash');
 
 /**
  * Add a given statement to a parent statement.
