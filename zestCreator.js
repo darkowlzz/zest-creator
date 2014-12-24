@@ -5,7 +5,7 @@ module.exports = ZestCreator;
 var createStatement = require('./createStatement'),
     addToStatement  = require('./addToStatement'),
     helper          = require('./helper'),
-    _               = require('underscore'),
+    _               = require('lodash'),
     JQL             = require('jsonquerylanguage'),
     jql             = new JQL(),
     fs              = require('fs');
@@ -118,7 +118,6 @@ ZestCreator.prototype = {
             targetIndex = parent.index + 1;
           }
         }
-        var nextCounter = 0;
         var postStmts = [];
         // collect all the following stmts and increment index value
         for (var i = targetIndex; i <= this.statementCount; i++) {
@@ -176,6 +175,19 @@ ZestCreator.prototype = {
     if (this.debug) {
       console.log(message, args);
     }
+  },
+
+  deleteStatement: function (ident) {
+    /*
+    var postStmts = [];
+    for (var i = ident.index + 1; i <= this.statementCount; i++) {
+      postStmts.push(this.getStatement(i));
+    }
+    postStmts.forEach(function (item) {
+      --item.index;
+    });
+    --this.stmtIndex;
+    */
   },
 
   /**

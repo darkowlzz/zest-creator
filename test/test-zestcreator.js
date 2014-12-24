@@ -2,7 +2,7 @@
 
 var ZestCreator = require('../'),
     should = require('should'),
-    _      = require('underscore');
+    _      = require('lodash');
 
 var opts = {
   title: 'my zest',
