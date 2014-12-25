@@ -178,16 +178,19 @@ ZestCreator.prototype = {
   },
 
   deleteStatement: function (ident) {
-    /*
-    var postStmts = [];
-    for (var i = ident.index + 1; i <= this.statementCount; i++) {
-      postStmts.push(this.getStatement(i));
+    if (!! ident.parentIndex) {
+    
+    } else {
+      findAndDelete(this.statements, ident.index);
+      var postStmts = [];
+      for (var i = ident.index + 1; i <= this.statementCount; i++) {
+        postStmts.push(this.getStatement(i));
+      }
+      postStmts.forEach(function (item) {
+        item.index--;
+      });
+      --this.stmtIndex;
     }
-    postStmts.forEach(function (item) {
-      --item.index;
-    });
-    --this.stmtIndex;
-    */
   },
 
   /**
@@ -204,3 +207,15 @@ ZestCreator.prototype = {
     fs.writeFileSync(filename, text);
   }
 };
+
+function findAndDelete (list, index) {
+  _.remove(list, function (item) {
+    if (! _.isEmpty(item.ifStatements)) {
+      findAndDelete(item.ifStatements, index);
+    }
+    if (! _.isEmpty(item.elseStatements)) {
+      findAndDelete(item.elseStatements, index);
+    }
+    return item.index == index;
+  });
+}
