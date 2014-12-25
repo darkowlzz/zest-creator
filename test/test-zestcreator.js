@@ -702,4 +702,13 @@ describe('ZC basic testing', function () {
       //console.log(JSON.stringify(zc.getZest(), undefined, 2));
     });
   });
+
+  describe('delete zest statements', function () {
+    it('should delete the last statement', function () {
+      zc.deleteStatement({index: 30});
+      zc.statementCount.should.be.exactly(29);
+      var last = zc.getStatement(30);
+      (last === undefined).should.be.true;
+    });
+  });
 });
