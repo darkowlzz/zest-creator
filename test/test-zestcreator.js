@@ -723,10 +723,35 @@ describe('ZC basic testing', function () {
       zc.statementCount.should.be.exactly(24);
     });
 
+    it('should delete statement in a loop', function () {
+      zc.deleteStatement({index: 19});
+      zc.statementCount.should.be.exactly(23);
+    });
+
     it('should delete loop stmt with sub stmts', function () {
       // This would delete a loop stmt with 4 sub stmts. In total 5 stmts.
       zc.deleteStatement({index: 16});
       zc.statementCount.should.be.exactly(19);
+    });
+
+    it('should delete substatement without zest index', function () {
+      // This would delete an assertion statement.
+      zc.deleteStatement({parentIndex: 3,
+                          subStatementOf: 'assertions',
+                          index: 2});
+      var stmt = zc.getStatement(3);
+      stmt.assertions.should.have.length(2);
+
+      zc.deleteStatement({parentIndex: 3,
+                          subStatementOf: 'response'});
+      stmt.response.should.be.empty;
+      zc.statementCount.should.be.exactly(19);
+    });
+
+    it('should delete all the statements', function () {
+      zc.deleteAll();
+      var z = zc.getZest();
+      z.statements.should.be.empty;
     });
   });
 });

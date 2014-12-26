@@ -183,11 +183,18 @@ ZestCreator.prototype = {
    * @param {object} ident
    *    An object with details to identify the stmt to be deleted.
    *    Example: {index: 4} or
-   *    {parentIndex: 3, subStatementOf: 'ifStatements', someAttr: value}
+   *    {parentIndex: 3, subStatementOf: 'ifStatements', index: 2}
    */
   deleteStatement: function (ident) {
     if (!! ident.parentIndex) {
-    
+      var parentStmt, list;
+      parentStmt = this.getStatement(ident.parentIndex);
+      if (!! ident.index) {
+        list = parentStmt[ident.subStatementOf];
+        list.splice(ident.index - 1, 1);
+      } else {
+        parentStmt[ident.subStatementOf] = {};
+      }
     } else {
       var stmt, lastStmt, nextIndex, diff;
       stmt = this.getStatement(ident.index);
@@ -221,6 +228,18 @@ ZestCreator.prototype = {
     }
   },
 
+  // Delete all the zest statements.
+  deleteAll: function () {
+    this.statements = [];
+    this.stmtIndex = 0;
+  },
+
+  /**
+   * Shift the zest statements by decrementing index value by value diff.
+   *
+   * @param {number} from - shift from index number.
+   * @param {number} diff - diff value for shifting.
+   */
   shiftIndex: function (from, diff) {
     var postStmts = [];
     for (var i = from; i <= this.statementCount; i++) {
@@ -246,6 +265,12 @@ ZestCreator.prototype = {
   }
 };
 
+/**
+ * Find and Delete the given index statement from the given list.
+ *
+ * @param {array} list - An array of statements.
+ * @index {number} index - Index of the statement to be deleted.
+ */
 function findAndDelete (list, index) {
   _.remove(list, function (item) {
     if (! _.isEmpty(item.ifStatements)) {
@@ -254,8 +279,9 @@ function findAndDelete (list, index) {
     if (! _.isEmpty(item.elseStatements)) {
       findAndDelete(item.elseStatements, index);
     }
+    if (! _.isEmpty(item.statements)) {
+      findAndDelete(item.statements, index);
+    }
     return item.index == index;
   });
 }
-
-
