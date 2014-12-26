@@ -703,49 +703,65 @@ describe('ZC basic testing', function () {
     });
   });
 
+  describe('add in between', function () {
+    it('should add stmt in between the existing stmts', function () {
+      var stmt = {comment: 'New comment', elementType: 'ZestComment',
+                  after: 2};
+      zc.addStatement(stmt);
+      stmt = zc.getStatement(3);
+      stmt.should.have.properties({
+        comment: 'New comment',
+        elementType: 'ZestComment',
+        index: 3,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(32);
+    });
+  });
+
   describe('delete zest statements', function () {
     it('should delete the last statement', function () {
-      zc.deleteStatement({index: 31});
-      zc.statementCount.should.be.exactly(30);
-      var last = zc.getStatement(31);
+      zc.deleteStatement({index: 32});
+      zc.statementCount.should.be.exactly(31);
+      var last = zc.getStatement(32);
       (last === undefined).should.be.true;
     });
 
     it('should delete conditional statement with sub stmts', function () {
       // This would delete a conditiona stmt with 4 sub stmts. In total 5
       // stmts.
-      zc.deleteStatement({index: 4});
-      zc.statementCount.should.be.exactly(25);
+      zc.deleteStatement({index: 5});
+      zc.statementCount.should.be.exactly(26);
     });
 
     it('should delete conditional stmt without sub stmt', function () {
-      zc.deleteStatement({index: 10});
-      zc.statementCount.should.be.exactly(24);
+      zc.deleteStatement({index: 11});
+      zc.statementCount.should.be.exactly(25);
     });
 
     it('should delete statement in a loop', function () {
-      zc.deleteStatement({index: 19});
-      zc.statementCount.should.be.exactly(23);
+      zc.deleteStatement({index: 20});
+      zc.statementCount.should.be.exactly(24);
     });
 
     it('should delete loop stmt with sub stmts', function () {
       // This would delete a loop stmt with 4 sub stmts. In total 5 stmts.
-      zc.deleteStatement({index: 16});
-      zc.statementCount.should.be.exactly(19);
+      zc.deleteStatement({index: 17});
+      zc.statementCount.should.be.exactly(20);
     });
 
     it('should delete substatement without zest index', function () {
       // This would delete an assertion statement.
-      zc.deleteStatement({parentIndex: 3,
+      zc.deleteStatement({parentIndex: 4,
                           subStatementOf: 'assertions',
                           index: 2});
-      var stmt = zc.getStatement(3);
+      var stmt = zc.getStatement(4);
       stmt.assertions.should.have.length(2);
 
-      zc.deleteStatement({parentIndex: 3,
+      zc.deleteStatement({parentIndex: 4,
                           subStatementOf: 'response'});
       stmt.response.should.be.empty;
-      zc.statementCount.should.be.exactly(19);
+      zc.statementCount.should.be.exactly(20);
     });
 
     it('should delete all the statements', function () {
