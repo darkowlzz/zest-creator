@@ -56,6 +56,12 @@ ZestCreator.prototype = {
         stmt.enabled = true;
       }
       addToStatement(stmt, ele, this.statements);
+    } else if (_.has(ele, 'after')) {
+      stmt.index = ele.after + 1;
+      stmt.enabled = true;
+      this.shiftIndexAhead(stmt.index, 1);
+      this.statements.splice(ele.after, 0, stmt);
+      ++this.stmtIndex;
     } else if (!! stmt) {
       stmt.index = ++this.stmtIndex;
       stmt.enabled = true;
@@ -118,14 +124,7 @@ ZestCreator.prototype = {
             targetIndex = parent.index + 1;
           }
         }
-        var postStmts = [];
-        // collect all the following stmts and increment index value
-        for (var i = targetIndex; i <= this.statementCount; i++) {
-          postStmts.push(this.getStatement(i));
-        }
-        postStmts.forEach(function (item) {
-          item.index++;
-        });
+        this.shiftIndexAhead(targetIndex, 1);
         ++this.stmtIndex;
         return targetIndex;
       }
@@ -223,7 +222,7 @@ ZestCreator.prototype = {
         diff = 1;
       }
       findAndDelete(this.statements, ident.index);
-      this.shiftIndex(nextIndex, diff);
+      this.shiftIndexBack(nextIndex, diff);
       this.stmtIndex -= diff;
     }
   },
@@ -235,18 +234,34 @@ ZestCreator.prototype = {
   },
 
   /**
-   * Shift the zest statements by decrementing index value by value diff.
+   * Shift the zest statements by decrementing index value.
    *
    * @param {number} from - shift from index number.
    * @param {number} diff - diff value for shifting.
    */
-  shiftIndex: function (from, diff) {
+  shiftIndexBack: function (from, diff) {
     var postStmts = [];
     for (var i = from; i <= this.statementCount; i++) {
       postStmts.push(this.getStatement(i));
     }
     postStmts.forEach(function (item) {
       item.index -= diff;
+    });
+  },
+
+  /**
+   * Shift the zest stmts by incrementing index value.
+   *
+   * @param {number} from - shift from index number.
+   * @param {number} diff - diff value for shifting.
+   */
+  shiftIndexAhead: function (from, diff) {
+    var postStmts = [];
+    for (var i = from; i <= this.statementCount; i++) {
+      postStmts.push(this.getStatement(i));
+    }
+    postStmts.forEach(function (item) {
+      item.index += diff;
     });
   },
 
