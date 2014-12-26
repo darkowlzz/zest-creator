@@ -234,6 +234,17 @@ ZestCreator.prototype = {
   },
 
   /**
+   * Get next statement of the given statement.
+   *
+   * @param {object} stmt - a zest statement.
+   *
+   * @return {object} - next zest statement.
+   */
+  nextStatement: function (stmt) {
+    return this.getStatement(stmt.index + 1);
+  },
+
+  /**
    * Shift the zest statements by decrementing index value.
    *
    * @param {number} from - shift from index number.
