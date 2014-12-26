@@ -719,6 +719,15 @@ describe('ZC basic testing', function () {
     });
   });
 
+  describe('get next statement', function () {
+    it('should get correct next statement', function () {
+      var stmt = zc.getStatement(2);
+      stmt.index.should.be.exactly(2);
+      stmt = zc.nextStatement(stmt);
+      stmt.index.should.be.exactly(3);
+    });
+  });
+
   describe('delete zest statements', function () {
     it('should delete the last statement', function () {
       zc.deleteStatement({index: 32});
