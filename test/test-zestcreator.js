@@ -699,16 +699,34 @@ describe('ZC basic testing', function () {
         elementType: 'ZestLoopClientElements'
       });
       zc.statementCount.should.be.exactly(30);
-      //console.log(JSON.stringify(zc.getZest(), undefined, 2));
+      zc.addStatement({comment: 'Over', elementType: 'ZestComment'});
     });
   });
 
   describe('delete zest statements', function () {
     it('should delete the last statement', function () {
-      zc.deleteStatement({index: 30});
-      zc.statementCount.should.be.exactly(29);
-      var last = zc.getStatement(30);
+      zc.deleteStatement({index: 31});
+      zc.statementCount.should.be.exactly(30);
+      var last = zc.getStatement(31);
       (last === undefined).should.be.true;
+    });
+
+    it('should delete conditional statement with sub stmts', function () {
+      // This would delete a conditiona stmt with 4 sub stmts. In total 5
+      // stmts.
+      zc.deleteStatement({index: 4});
+      zc.statementCount.should.be.exactly(25);
+    });
+
+    it('should delete conditional stmt without sub stmt', function () {
+      zc.deleteStatement({index: 10});
+      zc.statementCount.should.be.exactly(24);
+    });
+
+    it('should delete loop stmt with sub stmts', function () {
+      // This would delete a loop stmt with 4 sub stmts. In total 5 stmts.
+      zc.deleteStatement({index: 16});
+      zc.statementCount.should.be.exactly(19);
     });
   });
 });

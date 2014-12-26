@@ -177,20 +177,58 @@ ZestCreator.prototype = {
     }
   },
 
+  /**
+   * Delete a given statement from the list of statements.
+   *
+   * @param {object} ident
+   *    An object with details to identify the stmt to be deleted.
+   *    Example: {index: 4} or
+   *    {parentIndex: 3, subStatementOf: 'ifStatements', someAttr: value}
+   */
   deleteStatement: function (ident) {
     if (!! ident.parentIndex) {
     
     } else {
-      findAndDelete(this.statements, ident.index);
-      var postStmts = [];
-      for (var i = ident.index + 1; i <= this.statementCount; i++) {
-        postStmts.push(this.getStatement(i));
+      var stmt, lastStmt, nextIndex, diff;
+      stmt = this.getStatement(ident.index);
+      if (stmt.elementType === 'ZestConditional') {
+        // find the last stmt in the conditional stmt
+        if (! _.isEmpty(stmt.elseStatements)) {
+          lastStmt = _.last(stmt.elseStatements);
+        } else if (! _.isEmpty(stmt.ifStatements)) {
+          lastStmt = _.last(stmt.ifStatements);
+        } else {
+          lastStmt = stmt;
+        }
+        nextIndex = lastStmt.index + 1;
+        diff = nextIndex - stmt.index;
+      } else if (stmt.elementType.indexOf('ZestLoop') > -1) {
+        // find the last stmt in the loop stmt
+        if (! _.isEmpty(stmt.statements)) {
+          lastStmt = _.last(stmt.statements);
+        } else {
+          lastStmt = stmt;
+        }
+        nextIndex = lastStmt.index + 1;
+        diff = nextIndex - stmt.index;
+      } else {
+        nextIndex = ident.index + 1;
+        diff = 1;
       }
-      postStmts.forEach(function (item) {
-        item.index--;
-      });
-      --this.stmtIndex;
+      findAndDelete(this.statements, ident.index);
+      this.shiftIndex(nextIndex, diff);
+      this.stmtIndex -= diff;
     }
+  },
+
+  shiftIndex: function (from, diff) {
+    var postStmts = [];
+    for (var i = from; i <= this.statementCount; i++) {
+      postStmts.push(this.getStatement(i));
+    }
+    postStmts.forEach(function (item) {
+      item.index -= diff;
+    });
   },
 
   /**
@@ -219,3 +257,5 @@ function findAndDelete (list, index) {
     return item.index == index;
   });
 }
+
+
