@@ -10,6 +10,7 @@
   "license": "MPL",
   "dependencies": {
     "enum": "^0.2.6",
+    "json-easy-filter": "^0.3.0",
     "jsonquerylanguage": "^0.91.7",
     "lodash": "^2.4.1"
   },

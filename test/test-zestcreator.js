@@ -728,6 +728,33 @@ describe('ZC basic testing', function () {
     });
   });
 
+  /*
+  describe('get move statement', function () {
+    it('shuold move first stmt to last', function () {
+      zc.move(1, 32);
+      var stmt = zc.getStatement(32);
+      stmt.should.have.properties({
+        comment: 'A comment',
+        elementType: 'ZestComment',
+        index: 32,
+        enabled: true
+      });
+    });
+
+    it('should move last stmt to first', function () {
+      console.log(JSON.stringify(zc.getZest(), undefined, 2));
+      //zc.move(32, 1);
+      //var stmt = zc.getStatement(1);
+      stmt.should.have.properties({
+        comment: 'A comment',
+        elementType: 'ZestComment',
+        index: 1,
+        enabled: true
+      });
+    });
+  });
+  */
+
   describe('delete zest statements', function () {
     it('should delete the last statement', function () {
       zc.deleteStatement({index: 32});
