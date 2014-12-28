@@ -233,6 +233,40 @@ ZestCreator.prototype = {
     this.stmtIndex = 0;
   },
 
+  isSubStatement: function (index) {
+    return helper.isSubStatement(this.statements, index);
+  },
+
+  /**
+   * Move statements.
+   *
+   * @param {number} oldIndex - Index value of previous position.
+   * @param {number} newIndex - Index value of the new position.
+   */
+  move: function (oldIndex, newIndex) {
+    this.statements.splice(newIndex - 1, 0,
+                           this.statements.splice(oldIndex - 1, 1)[0]);
+    if (oldIndex < newIndex) {
+      var stmt = this.getStatement(oldIndex);
+      var nextStmt = this.nextStatement(stmt);
+      stmt.index = newIndex;
+      for (var i = oldIndex; i < newIndex; i++) {
+        stmt = nextStmt;
+        nextStmt = this.nextStatement(stmt);
+        stmt.index = i;
+      }
+    } else if (oldIndex > newIndex) {
+      var stmt = this.getStatement(oldIndex);
+      var nextStmt = this.getStatement(newIndex);
+      stmt.index = newIndex;
+      for (var i = newIndex + 1; i <= oldIndex; i++) {
+        stmt = nextStmt;
+        nextStmt = this.nextStatement(stmt);
+        stmt.index = i;
+      }
+    }
+  },
+
   /**
    * Get next statement of the given statement.
    *

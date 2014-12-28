@@ -1,8 +1,9 @@
 'use strict';
 
-var JQL  = require('jsonquerylanguage'),
-    jql  = new JQL(),
-    Enum = require('enum');
+var JQL     = require('jsonquerylanguage'),
+    jql     = new JQL(),
+    Enum    = require('enum'),
+    JefNode = require('json-easy-filter').JefNode;
 
 function getStatement (index, stmts) {
   var result = jql.searchAndGetValues(stmts,
@@ -22,3 +23,17 @@ var ZestStatement = new Enum([
   'ZestAssignStringDelimiters', 'ZestAssignRegexDelimiters', 'ZestLoopString'
 ]);
 exports.ZestStatement = ZestStatement;
+
+function isSubStatement (statements, index) {
+  var res = new JefNode(statements).filter(function(node) {
+    if (node.value.index === index) {
+      return node.parent.parent.value;
+    }
+  });
+  if (!! res[0].index) {
+    return true;
+  } else {
+    return false;
+  }
+}
+exports.isSubStatement = isSubStatement;
