@@ -167,7 +167,7 @@ ZestCreator.prototype = {
    * @return {object} - requested statement object.
    */
   getStatement: function (index) {
-    return helper.getStatement(index, this.statements);
+    return helper.getStatement(this.statements, index);
   },
 
   log: function (message, args) {
@@ -231,6 +231,10 @@ ZestCreator.prototype = {
   deleteAll: function () {
     this.statements = [];
     this.stmtIndex = 0;
+  },
+
+  getParent: function (index) {
+    
   },
 
   isSubStatement: function (index) {

@@ -5,7 +5,7 @@ var JQL     = require('jsonquerylanguage'),
     Enum    = require('enum'),
     JefNode = require('json-easy-filter').JefNode;
 
-function getStatement (index, stmts) {
+function getStatement (stmts, index) {
   var result = jql.searchAndGetValues(stmts,
                                       '~[?(@.index == ' + index + ' )]');
   if (result == []) {
@@ -25,7 +25,7 @@ var ZestStatement = new Enum([
 exports.ZestStatement = ZestStatement;
 
 function isSubStatement (statements, index) {
-  var res = new JefNode(statements).filter(function(node) {
+  var res = new JefNode(statements).filter(function (node) {
     if (node.value.index === index) {
       return node.parent.parent.value;
     }
@@ -37,3 +37,17 @@ function isSubStatement (statements, index) {
   }
 }
 exports.isSubStatement = isSubStatement;
+
+function getParent (statements, index) {
+  var res = new JefNode(statements).filter(function (node) {
+    if (node.value.index === index) {
+      return node.parent.parent.value;
+    }
+  });
+  if (!! res[0].index) {
+    return res[0];
+  } else {
+    return null;
+  }
+};
+exports.getParent = getParent;

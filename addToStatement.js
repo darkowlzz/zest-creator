@@ -13,7 +13,7 @@ var helper = require('./helper'),
  * @param {array} stmts - An array of statements present in ZC.
  */
 function addToStatement (stmt, ele, stmts) {
-  var parent = helper.getStatement(ele.parentIndex, stmts);
+  var parent = helper.getStatement(stmts, ele.parentIndex);
 
   switch (stmt.elementType) {
     case 'ZestResponse':
