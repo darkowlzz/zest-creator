@@ -26,4 +26,10 @@ describe('test helper functions', function () {
   it('should not get parent', function () {
     (helper.getParent(sampleZest.statements, 2) === null).should.be.true;
   });
+
+  it('should get correct substmt index', function () {
+    var target = {index: 6};
+    helper.getSubStmtIndex(sampleZest.statements[4].ifStatements, target)
+    .should.be.exactly(0);
+  });
 });

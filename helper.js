@@ -51,3 +51,13 @@ function getParent (statements, index) {
   }
 };
 exports.getParent = getParent;
+
+function getSubStmtIndex (stmts, stmt) {
+  var index = stmts.map(function (obj, index) {
+    if (obj.index == stmt.index) {
+      return index;
+    }
+  }).filter(isFinite);
+  return index[0];
+}
+exports.getSubStmtIndex = getSubStmtIndex;

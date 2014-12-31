@@ -167,7 +167,12 @@ ZestCreator.prototype = {
    * @return {object} - requested statement object.
    */
   getStatement: function (index) {
+    console.log('getting ' + index);
     return helper.getStatement(this.statements, index);
+  },
+
+  getParent: function (index) {
+    return helper.getParent(this.statements, index);
   },
 
   log: function (message, args) {
@@ -233,10 +238,6 @@ ZestCreator.prototype = {
     this.stmtIndex = 0;
   },
 
-  getParent: function (index) {
-    
-  },
-
   isSubStatement: function (index) {
     return helper.isSubStatement(this.statements, index);
   },
@@ -248,10 +249,29 @@ ZestCreator.prototype = {
    * @param {number} newIndex - Index value of the new position.
    */
   move: function (oldIndex, newIndex) {
-    this.statements.splice(newIndex - 1, 0,
-                           this.statements.splice(oldIndex - 1, 1)[0]);
+    var oldStmt = this.getStatement(oldIndex);
+    var newStmt = this.getStatement(newIndex);
+    if (this.isSubStatement(oldStmt.index)) {
+      console.log('old has parent');
+      var parentOld = this.getParent(oldStmt.index);
+      if (this.isSubStatement(newStmt.index)) {
+        console.log('new has parent');
+        var parentNew = this.getParent(newStmt.index);
+        if (parentOld.index === parentNew.index) {
+          console.log('parents match');
+          parentOld.ifStatements.splice(newIndex - 1, 0,
+                           parentOld.ifStatements.splice(oldIndex - 1, 1)[0]);
+          console.log('done!');
+          console.log(JSON.stringify(parentOld, undefined, 2));
+        }
+      }
+    }
+    //this.statements.splice(newIndex - 1, 0,
+    //                       this.statements.splice(oldIndex - 1, 1)[0]);
     if (oldIndex < newIndex) {
+      console.log('inside if');
       var stmt = this.getStatement(oldIndex);
+      console.log(JSON.stringify(stmt));
       var nextStmt = this.nextStatement(stmt);
       stmt.index = newIndex;
       for (var i = oldIndex; i < newIndex; i++) {
