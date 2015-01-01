@@ -729,31 +729,37 @@ describe('ZC basic testing', function () {
   });
 
   describe('get move statement', function () {
-    /*
     it('shuold move first stmt to last', function () {
-      zc.move(1, 32);
-      var stmt = zc.getStatement(32);
-      stmt.should.have.properties({
-        comment: 'A comment',
-        elementType: 'ZestComment',
-        index: 32,
-        enabled: true
+      var stmtBefore = zc.getStatement(1);
+      zc.move(1, 3);
+      var stmtAfter = zc.getStatement(3);
+      stmtBefore.should.have.properties({
+        comment: stmtAfter.comment,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
       });
     });
-    */
 
-    it('should move last stmt to first', function () {
+    it('should move conditional sub stmts', function () {
+      var stmtBefore = zc.getStatement(6);
       zc.move(6, 8);
-      var stmt = zc.getStatement(5);
-      console.log(JSON.stringify(zc.getZest(), undefined, 2));
-      /*
-      stmt.should.have.properties({
-        comment: 'A comment',
-        elementType: 'ZestComment',
-        index: 1,
-        enabled: true
+      var stmtAfter = zc.getStatement(8);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
       });
-      */
+    });
+
+    it('should move loop sub stmts', function () {
+      var stmtBefore = zc.getStatement(24);
+      zc.move(24, 26);
+      var stmtAfter = zc.getStatement(26);
+      stmtBefore.should.have.properties({
+        comment: stmtAfter.comment,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
     });
   });
 

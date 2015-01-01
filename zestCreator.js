@@ -167,7 +167,6 @@ ZestCreator.prototype = {
    * @return {object} - requested statement object.
    */
   getStatement: function (index) {
-    console.log('getting ' + index);
     return helper.getStatement(this.statements, index);
   },
 
@@ -252,26 +251,39 @@ ZestCreator.prototype = {
     var oldStmt = this.getStatement(oldIndex);
     var newStmt = this.getStatement(newIndex);
     if (this.isSubStatement(oldStmt.index)) {
-      console.log('old has parent');
       var parentOld = this.getParent(oldStmt.index);
       if (this.isSubStatement(newStmt.index)) {
-        console.log('new has parent');
         var parentNew = this.getParent(newStmt.index);
-        if (parentOld.index === parentNew.index) {
-          console.log('parents match');
-          parentOld.ifStatements.splice(newIndex - 1, 0,
-                           parentOld.ifStatements.splice(oldIndex - 1, 1)[0]);
-          console.log('done!');
-          console.log(JSON.stringify(parentOld, undefined, 2));
+
+        if (parentOld.elementType === 'ZestConditional') {
+          var subIndexOld = helper.getSubStmtIndex(parentOld.ifStatements,
+                                                   oldStmt);
+          parentOld.ifStatements.splice(subIndexOld, 1);
+        } else if (parentOld.elementType.indexOf('ZestLoop') > -1) {
+          var subIndexOld = helper.getSubStmtIndex(parentOld.statements,
+                                                   oldStmt);
+          parentOld.statements.splice(subIndexOld, 1);
+        }
+        if (parentNew.elementType === 'ZestConditional') {
+          var subIndexNew = helper.getSubStmtIndex(parentNew.ifStatements,
+                                                   newStmt);
+          parentNew.ifStatements.splice(subIndexNew + 1, 0, oldStmt);
+        } else if (parentNew.elementType.indexOf('ZestLoop') > -1) {
+          var subIndexNew = helper.getSubStmtIndex(parentNew.statements,
+                                                   newStmt);
+          parentNew.statements.splice(subIndexNew + 1, 0, oldStmt);
         }
       }
+    } else {
+      var subIndexOld = helper.getSubStmtIndex(this.statements, oldStmt);
+      var subIndexNew = helper.getSubStmtIndex(this.statements, newStmt);
+
+      this.statements.splice(subIndexOld, 1);
+      this.statements.splice(subIndexNew, 0, oldStmt);
     }
-    //this.statements.splice(newIndex - 1, 0,
-    //                       this.statements.splice(oldIndex - 1, 1)[0]);
     if (oldIndex < newIndex) {
-      console.log('inside if');
       var stmt = this.getStatement(oldIndex);
-      console.log(JSON.stringify(stmt));
+      //console.log(JSON.stringify(stmt));
       var nextStmt = this.nextStatement(stmt);
       stmt.index = newIndex;
       for (var i = oldIndex; i < newIndex; i++) {
