@@ -21,22 +21,35 @@ var ZEST_VERSION = "1.0";
  *    A configuration object to set zest creator properties like
  *    `about`, `title`, `description`, `client`, `author`, `zestVersion`
  *    and `debug`.
+ * @param {object} [optional] script
+ *    Zest script to load.
  */
-function ZestCreator (opts) {
-  opts = opts || {};
-  this.config = _.defaults(opts, {
-    about: 'About text',
-    title: 'Unnamed Zest script',
-    description: 'No description',
-    client: 'Zest-Creator',
-    author: 'anon',
-    zestVersion: ZEST_VERSION,
-    debug: DEBUG
-  });
+function ZestCreator (opts, script) {
+  opts = opts || {}; 
 
-  this.index = 0;  // script index
-  this.stmtIndex = 0;  // statement index
-  this.statements = [];
+  if (!! script) {
+    this.script = script;
+    this.config = _.defaults(opts, {
+      debug: DEBUG
+    });
+    this.index = this.script.index;
+    this.statements = this.script.statements;
+    this.stmtIndex = getLastStmtIndex(this.statements);
+  } else {
+    this.config = _.defaults(opts, {
+      about: 'About text',
+      title: 'Unnamed Zest script',
+      description: 'No description',
+      client: 'Zest-Creator',
+      author: 'anon',
+      zestVersion: ZEST_VERSION,
+      debug: DEBUG
+    });
+
+    this.index = 0;  // script index
+    this.stmtIndex = 0;  // statement index
+    this.statements = [];
+  }
 }
 
 ZestCreator.prototype = {
@@ -134,18 +147,18 @@ ZestCreator.prototype = {
   // Returns a proper zest object.
   getZest: function () {
     return {
-      about: this.config.about,
-      zestVersion: this.config.zestVersion,
-      title: this.config.title,
-      description: this.config.description,
-      author: this.config.author,
-      generatedBy: this.config.client,
-      parameters: {
+      about: this.config.about || this.script.about,
+      zestVersion: this.config.zestVersion || this.script.zestVersion,
+      title: this.config.title || this.script.title,
+      description: this.config.description || this.script.description,
+      author: this.config.author || this.script.author,
+      generatedBy: this.config.client || this.script.generatedBy,
+      parameters:  {
         tokenStart: "{{",
         tokenEnd: "}}",
         tokens: {},
         elementType: 'ZestVariables'
-      },
+      } || this.script.parameters,
       statements: this.statements,
       authentication: [],
       index: this.index,
@@ -388,6 +401,7 @@ ZestCreator.prototype = {
  * @param {array} list - An array of statements.
  * @index {number} index - Index of the statement to be deleted.
  */
+// TODO: Write test
 function findAndDelete (list, index) {
   _.remove(list, function (item) {
     if (! _.isEmpty(item.ifStatements)) {
@@ -401,4 +415,20 @@ function findAndDelete (list, index) {
     }
     return item.index == index;
   });
+}
+
+// TODO: Write test
+function getLastStmtIndex (stmts) {
+  var lastStmt = _.last(stmts);
+  if (lastStmt.elementType === 'ZestConditional') {
+    if (lastStmt.elseStatements.length === 0) {
+      return _.last(lastStmt.ifStatements).index;
+    } else {
+      return _.last(lastStmt.elseStatements).index;
+    }
+  } else if (lastStmt.elementType.indexOf('ZestLoop') > -1) {
+    return _.last(lastStmt.statements).index;
+  } else {
+    return lastStmt.index;
+  }
 }
