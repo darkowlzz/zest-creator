@@ -19,11 +19,21 @@ describe('test helper functions', function () {
     helper.isSubStatement(sampleZest.statements, 3).should.be.false;
   });
 
+  it('should be a substatement', function () {
+    helper.isSubStatement(sampleZest.statements, 24).should.be.true;
+  });
+
   it('should get parent', function () {
     helper.getParent(sampleZest.statements, 6).index.should.be.exactly(5);
   });
 
   it('should not get parent', function () {
     (helper.getParent(sampleZest.statements, 2) === null).should.be.true;
+  });
+
+  it('should get correct substmt index', function () {
+    var target = {index: 6};
+    helper.getSubStmtIndex(sampleZest.statements[4].ifStatements, target)
+    .should.be.exactly(0);
   });
 });

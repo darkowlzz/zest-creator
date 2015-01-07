@@ -297,6 +297,7 @@ describe('ZC basic testing', function () {
       actionPrint.subStatementOf = 'ifStatements';
       var index = zc.statementCount;
       actionPrint.parentIndex = index;
+      actionPrint.message = 'Pass inside conditional';
       zc.addStatement(actionPrint);
 
       var actionFail = _.clone(sampleActionFail);
@@ -310,7 +311,7 @@ describe('ZC basic testing', function () {
       zc.addStatement(actionSleep);
 
       var expectedIf = {
-        message: 'Pass',
+        message: 'Pass inside conditional',
         elementType: 'ZestActionPrint',
         index: 5,
         enabled: true
@@ -728,33 +729,117 @@ describe('ZC basic testing', function () {
     });
   });
 
-  /*
   describe('get move statement', function () {
-    it('shuold move first stmt to last', function () {
-      zc.move(1, 32);
-      var stmt = zc.getStatement(32);
-      stmt.should.have.properties({
-        comment: 'A comment',
-        elementType: 'ZestComment',
-        index: 32,
-        enabled: true
+    it('shuold move first stmt to thrid stmt', function () {
+      var stmtBefore = zc.getStatement(1);
+      zc.move(1, 3);
+      var stmtAfter = zc.getStatement(3);
+      stmtBefore.should.have.properties({
+        comment: stmtAfter.comment,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
       });
     });
 
-    it('should move last stmt to first', function () {
+    it('should move from if substmt block to loop block', function () {
+      var stmtBefore = zc.getStatement(6);
+      zc.move(6, 24);
+      var stmtAfter = zc.getStatement(24);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move from if to else block', function () {
+      var stmtBefore = zc.getStatement(6);
+      zc.move(6, 8);
+      var stmtAfter = zc.getStatement(8);
+      stmtBefore.should.have.properties({
+        milliseconds: stmtAfter.milliseconds,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move from else subStmt block to loop block', function () {
+      var stmtBefore = zc.getStatement(7);
+      zc.move(7, 26);
+      var stmtAfter = zc.getStatement(26);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        priority: stmtAfter.priority,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move from loop block to if block', function () {
+      var stmtBefore = zc.getStatement(23);
+      zc.move(23, 6);
+      var stmtAfter = zc.getStatement(7);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move from loop block to else block', function () {
+      var stmtBefore = zc.getStatement(26);
+      zc.move(26, 8);
+      var stmtAfter = zc.getStatement(9);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        priority: stmtAfter.priority,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move from else to if block', function () {
+      var stmtBefore = zc.getStatement(9);
+      zc.move(9, 6);
+      var stmtAfter = zc.getStatement(7);
+      stmtBefore.should.have.properties({
+        message: stmtAfter.message,
+        priority: stmtAfter.priority,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    it('should move within loop block', function () {
+      var stmtBefore = zc.getStatement(24);
+      zc.move(24, 27);
+      var stmtAfter = zc.getStatement(27);
+      stmtBefore.should.have.properties({
+        comment: stmtAfter.comment,
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+
+      stmtBefore = zc.getStatement(26);
+      zc.move(26, 24);
+      stmtAfter = zc.getStatement(25);
+      stmtBefore.should.have.properties({
+        elementType: stmtAfter.elementType,
+        enabled: stmtAfter.enabled
+      });
+    });
+
+    /*
+    it('should move loop block down', function () {
+      var stmtBefore = zc.getStatement(23);
+      zc.move(23, 32);
       console.log(JSON.stringify(zc.getZest(), undefined, 2));
-      //zc.move(32, 1);
-      //var stmt = zc.getStatement(1);
-      stmt.should.have.properties({
-        comment: 'A comment',
-        elementType: 'ZestComment',
-        index: 1,
-        enabled: true
-      });
     });
-  });
-  */
+    */
 
+  });
+
+  /*
   describe('delete zest statements', function () {
     it('should delete the last statement', function () {
       zc.deleteStatement({index: 32});
@@ -806,4 +891,5 @@ describe('ZC basic testing', function () {
       z.statements.should.be.empty;
     });
   });
+  */
 });
