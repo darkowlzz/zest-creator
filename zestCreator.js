@@ -248,7 +248,7 @@ ZestCreator.prototype = {
    * @param {number} newIndex - Index value of the new position.
    */
   move: function (oldIndex, newIndex) {
-    var oldStmt = this.getStatement(oldIndex);
+    var oldStmt = _.clone(this.getStatement(oldIndex));
     var newStmt = this.getStatement(newIndex);
     if (this.isSubStatement(oldStmt.index)) {
       var parentOld = this.getParent(oldStmt.index);
@@ -256,24 +256,44 @@ ZestCreator.prototype = {
         var parentNew = this.getParent(newStmt.index);
 
         if (parentOld.elementType === 'ZestConditional') {
-          var subIndexOld = helper.getSubStmtIndex(parentOld.ifStatements,
-                                                   oldStmt);
-          parentOld.ifStatements.splice(subIndexOld, 1);
+          if (_.findIndex(parentOld.ifStatements, function (s) {
+            return s.index === oldStmt.index;
+          }) > -1) {
+            var subIndexOld = helper.getSubStmtIndex(parentOld.ifStatements,
+                                                     oldStmt);
+            parentOld.ifStatements.splice(subIndexOld, 1);
+          } else if (_.findIndex(parentOld.elseStatements, function (s) {
+            return s.index === oldStmt.index;
+          }) > -1) {
+            var subIndexOld = helper.getSubStmtIndex(parentOld.elseStatements,
+                                                     oldStmt);
+            parentOld.elseStatements.splice(subIndexOld, 1);
+          }
         } else if (parentOld.elementType.indexOf('ZestLoop') > -1) {
           var subIndexOld = helper.getSubStmtIndex(parentOld.statements,
                                                    oldStmt);
           parentOld.statements.splice(subIndexOld, 1);
         }
         if (parentNew.elementType === 'ZestConditional') {
-          var subIndexNew = helper.getSubStmtIndex(parentNew.ifStatements,
-                                                   newStmt);
-          parentNew.ifStatements.splice(subIndexNew + 1, 0, oldStmt);
+          if (_.findIndex(parentNew.ifStatements, function (s) {
+            return s.index === newStmt.index;
+          }) > -1) {
+            var subIndexNew = helper.getSubStmtIndex(parentNew.ifStatements,
+                                                     newStmt);
+            parentNew.ifStatements.splice(subIndexNew + 1, 0, oldStmt);
+          } else if (_.findIndex(parentNew.elseStatements, function (s) {
+            return s.index === newStmt.index;
+          }) > -1) {
+            var subIndexNew = helper.getSubStmtIndex(parentNew.elseStatements,
+                                                     newStmt);
+            parentNew.elseStatements.splice(subIndexNew + 1, 0, oldStmt);
+          }
         } else if (parentNew.elementType.indexOf('ZestLoop') > -1) {
           var subIndexNew = helper.getSubStmtIndex(parentNew.statements,
                                                    newStmt);
           parentNew.statements.splice(subIndexNew + 1, 0, oldStmt);
         }
-      }
+     }
     } else {
       var subIndexOld = helper.getSubStmtIndex(this.statements, oldStmt);
       var subIndexNew = helper.getSubStmtIndex(this.statements, newStmt);
@@ -281,9 +301,10 @@ ZestCreator.prototype = {
       this.statements.splice(subIndexOld, 1);
       this.statements.splice(subIndexNew, 0, oldStmt);
     }
+
+    // fix renumbering after moving block stmts
     if (oldIndex < newIndex) {
       var stmt = this.getStatement(oldIndex);
-      //console.log(JSON.stringify(stmt));
       var nextStmt = this.nextStatement(stmt);
       stmt.index = newIndex;
       for (var i = oldIndex; i < newIndex; i++) {
@@ -293,9 +314,9 @@ ZestCreator.prototype = {
       }
     } else if (oldIndex > newIndex) {
       var stmt = this.getStatement(oldIndex);
-      var nextStmt = this.getStatement(newIndex);
-      stmt.index = newIndex;
-      for (var i = newIndex + 1; i <= oldIndex; i++) {
+      var nextStmt = this.getStatement(newIndex + 1);
+      stmt.index = newIndex + 1;
+      for (var i = newIndex + 2; i <= oldIndex; i++) {
         stmt = nextStmt;
         nextStmt = this.nextStatement(stmt);
         stmt.index = i;

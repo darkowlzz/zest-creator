@@ -19,6 +19,10 @@ describe('test helper functions', function () {
     helper.isSubStatement(sampleZest.statements, 3).should.be.false;
   });
 
+  it('should be a substatement', function () {
+    helper.isSubStatement(sampleZest.statements, 24).should.be.true;
+  });
+
   it('should get parent', function () {
     helper.getParent(sampleZest.statements, 6).index.should.be.exactly(5);
   });
