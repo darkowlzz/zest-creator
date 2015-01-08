@@ -24,8 +24,15 @@ var ZEST_VERSION = "1.0";
  * @param {object} [optional] script
  *    Zest script to load.
  */
-function ZestCreator (opts, script) {
-  opts = opts || {}; 
+function ZestCreator (options, scpt) {
+  var opts = options || {};
+  var script = scpt || null;
+
+  // load zest from file
+  if (!! opts.file) {
+    var data = fs.readFileSync(opts.file, 'utf8');
+    script = JSON.parse(data);
+  }
 
   if (!! script) {
     this.script = script;

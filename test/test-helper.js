@@ -2,7 +2,7 @@
 
 var should     = require('should'),
     helper     = require('../helper'),
-    sampleZest = require('./sampleDataSet').sampleZest;
+    sampleZest = require('../testData/sampleDataSet').sampleZest;
 
 
 describe('test helper functions', function () {
