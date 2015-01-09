@@ -20,7 +20,9 @@ var ZestStatement = new Enum([
   'ZestComment', 'ZestRequest', 'ZestConditional', 'ZestActionPrint',
   'ZestActionFail', 'ZestActionSleep', 'ZestAssignString',
   'ZestAssignRandomInteger', 'ZestAssignFieldValue', 'ZestAssignReplace',
-  'ZestAssignStringDelimiters', 'ZestAssignRegexDelimiters', 'ZestLoopString'
+  'ZestAssignStringDelimiters', 'ZestAssignRegexDelimiters', 'ZestLoopString',
+  // Experimental
+  'ZestAssignCalc'
 ]);
 exports.ZestStatement = ZestStatement;
 

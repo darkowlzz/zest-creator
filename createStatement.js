@@ -261,6 +261,15 @@ function createStatement (ele) {
                     'set', 'statements', 'variableName', 'elementType');
       break;
 
+    /* Experimental */
+    case 'ZestAssignCalc':
+      stmt = _.pick(ele,
+                    'variableName', 'operandA', 'operandB', 'operation',
+                    'elementType');
+      break;
+
+    /* -- end -- */
+
     default:
       stmt = null;
   }
