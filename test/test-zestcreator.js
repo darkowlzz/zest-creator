@@ -156,6 +156,10 @@ var sampleLoopTokenClientElementsSet = {
   elementType: 'ZestLoopTokenClientElementsSet'
 };
 
+var sampleAssignCalc = {
+  elementType: 'ZestAssignCalc'
+};
+
 
 describe('create a ZestCreator object', function () {
   it('should create an object with default config', function () {
@@ -702,6 +706,26 @@ describe('ZC basic testing', function () {
       zc.statementCount.should.be.exactly(30);
       zc.addStatement({comment: 'Over', elementType: 'ZestComment'});
     });
+
+    it('should create ZestAssignCalc', function () {
+      var elementCalc = _.clone(sampleAssignCalc);
+      elementCalc.variableName = 'var10';
+      elementCalc.operandA = 'a';
+      elementCalc.operandB = 3;
+      elementCalc.operation = 'add';
+      zc.addStatement(elementCalc);
+      var stmt = zc.getStatement(32);
+      stmt.should.have.properties({
+        variableName: 'var10',
+        operandA: 'a',
+        operandB: 3,
+        operation: 'add',
+        elementType: 'ZestAssignCalc',
+        index: 32,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(32);
+    });
   });
 
   describe('add in between', function () {
@@ -716,7 +740,7 @@ describe('ZC basic testing', function () {
         index: 3,
         enabled: true
       });
-      zc.statementCount.should.be.exactly(32);
+      zc.statementCount.should.be.exactly(33);
     });
   });
 
@@ -729,6 +753,8 @@ describe('ZC basic testing', function () {
     });
   });
 
+
+  // NOTE: Move these tests to a separate file
   describe('get move statement', function () {
     it('shuold move first stmt to thrid stmt', function () {
       var stmtBefore = zc.getStatement(1);
