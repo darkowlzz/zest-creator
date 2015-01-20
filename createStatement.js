@@ -27,7 +27,7 @@ function createStatement (ele) {
     case 'ZestRequest':
       properties = _.pick(ele,
                           'url', 'data', 'method', 'headers',
-                          'followRedirect', 'elementType');
+                          'followRedirect', 'cookies', 'elementType');
       stmt = _.defaults(properties, {
         url: '',
         data: '',
@@ -36,6 +36,7 @@ function createStatement (ele) {
         response: {},
         assertions: [],
         followRedirect: false,
+        cookies: [],
         index: ''
       });
       break;
