@@ -29,10 +29,10 @@ function createStatement (ele) {
                           'url', 'data', 'method', 'headers',
                           'followRedirect', 'elementType');
       stmt = _.defaults(properties, {
-        url: 'unknown',
-        data: 'unknown',
-        method: 'unknown',
-        headers: 'unknown',
+        url: '',
+        data: '',
+        method: '',
+        headers: '',
         response: {},
         assertions: [],
         followRedirect: false,
@@ -45,11 +45,11 @@ function createStatement (ele) {
                           'url', 'headers', 'body', 'statusCode',
                           'responseTimeInMs', 'elementType');
       stmt = _.defaults(properties, {
-        url: 'unknown',
-        headers: 'unknown',
-        body: 'unknown',
-        statusCode: 'unknown',
-        responseTimeInMs: 'unknown',
+        url: '',
+        headers: '',
+        body: '',
+        statusCode: '',
+        responseTimeInMs: '',
         elementType: ele.elementType
       });
       break;
@@ -117,6 +117,15 @@ function createStatement (ele) {
                           'greaterThan', 'timeInMs', 'not', 'elementType');
       stmt = _.defaults(properties, {
         greaterThan: true,
+        not: false
+      });
+      stmt = createExpression(stmt, ele);
+      break;
+
+    case 'ZestExpressionIsInteger':
+      properties = _.pick(ele,
+                          'variableName', 'elementType');
+      stmt = _.defaults(properties, {
         not: false
       });
       stmt = createExpression(stmt, ele);

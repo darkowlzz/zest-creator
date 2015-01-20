@@ -45,6 +45,10 @@ var sampleExpressionRegex = {
   elementType: 'ZestExpressionRegex'
 };
 
+var sampleExpressionIsInteger = {
+  elementType: 'ZestExpressionIsInteger'
+};
+
 var sampleExpressionURL = {
   includeRegexes: '/.com$/',
   excludeRegexes: '/.net$/',
@@ -230,9 +234,9 @@ describe('ZC basic testing', function () {
       var stmt = zc.getStatement(zc.statementCount);
       stmt.should.have.properties({
         url: 'http://foo.com',
-        data: 'unknown',
+        data: '',
         method: 'GET',
-        headers: 'unknown',
+        headers: '',
         index: 3,
         enabled: true,
         elementType: 'ZestRequest'
@@ -289,6 +293,20 @@ describe('ZC basic testing', function () {
         caseExact: false,
         not: false,
         elementType: 'ZestExpressionRegex'
+      });
+    });
+
+    it('should create ExpressionIsInteger expression', function () {
+      var expIsInteger = _.clone(sampleExpressionIsInteger);
+      expIsInteger.variableName = 'foo99';
+      expIsInteger.subStatementOf = 'assertions';
+      expIsInteger.parentIndex = zc.statementCount;
+      zc.addStatement(expIsInteger);
+      var stmt = zc.getStatement(zc.statementCount);
+      stmt.assertions[3].rootExpression.should.have.properties({
+        elementType: 'ZestExpressionIsInteger',
+        not: false,
+        variableName: 'foo99'
       });
     });
 
@@ -863,6 +881,24 @@ describe('ZC basic testing', function () {
     });
     */
 
+  });
+
+  describe('conditional ZestExpressionIsInteger', function () {
+    it('should create ZestExpressionIsInteger conditional', function () {
+      zc.addStatement({variableName: 'bar99', elementType: 'ZestExpressionIsInteger'});
+      var stmt = zc.getStatement(zc.statementCount);
+      stmt.rootExpression.should.have.properties({
+        variableName: 'bar99',
+        not: false,
+        elementType: 'ZestExpressionIsInteger'
+      });
+      stmt.should.have.properties({
+        elementType: 'ZestConditional',
+        index: 34,
+        enabled: true
+      });
+      zc.statementCount.should.be.exactly(34);
+    });
   });
 
   /*
