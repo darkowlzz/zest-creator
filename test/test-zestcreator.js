@@ -237,6 +237,7 @@ describe('ZC basic testing', function () {
         data: '',
         method: 'GET',
         headers: '',
+        cookies: [],
         index: 3,
         enabled: true,
         elementType: 'ZestRequest'

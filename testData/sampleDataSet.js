@@ -75,6 +75,7 @@ exports.sampleZest = {
         }
       ],
       "followRedirect": false,
+      "cookies": [],
       "index": 4,
       "enabled": true
     },
