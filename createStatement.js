@@ -271,6 +271,28 @@ function createStatement (ele) {
                     'set', 'statements', 'variableName', 'elementType');
       break;
 
+    case 'ZestLoopTokenRegexSet':
+      properties = _.pick(ele,
+                          'inputVariableName', 'regex', 'groupIndex',
+                          'caseExact', 'elementType');
+      properties = _.defaults(properties, {
+        groupIndex: 0,
+        caseExact: false
+      });
+      var loopRegex = {
+        set: properties,
+        statements: [],
+        variableName: ele.variableName,
+        elementType: 'ZestLoopRegex'
+      };
+      stmt = createStatement(loopRegex);
+      break;
+
+    case 'ZestLoopRegex':
+      stmt = _.pick(ele,
+                    'set', 'statements', 'variableName', 'elementType');
+      break;
+
     /* Experimental */
     case 'ZestAssignCalc':
       stmt = _.pick(ele,
