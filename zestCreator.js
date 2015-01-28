@@ -70,6 +70,10 @@ ZestCreator.prototype = {
    */
   addStatement: function (ele) {
     var stmt = createStatement(ele);
+    if (stmt === null) {
+      console.log('Unknown statement');
+      return;
+    }
     if (_.has(ele, 'subStatementOf')) {
       if (!! helper.ZestStatement.get(stmt.elementType)) {
         stmt.index = this._makeSpace(ele);
