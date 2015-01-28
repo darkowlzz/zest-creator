@@ -1,11 +1,19 @@
 {
   "name": "zest-creator",
-  "version": "0.0.0",
-  "description": "create zest objects from raw data",
+  "version": "0.0.1",
+  "description": "Create valid Zest Scripts and interact with them.",
   "main": "zestCreator.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/darkowlzz/zest-creator.git"
+  },
   "scripts": {
     "test": "mocha"
   },
+  "keywords": [
+    "zest",
+    "zest-creator"
+  ],
   "author": "Sunny <indiasuny000@gmail.com> (darkowlzz)",
   "license": "MPL",
   "dependencies": {
