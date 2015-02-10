@@ -7,12 +7,12 @@ var createStatement = require('./createStatement'),
     helper          = require('./helper'),
     _               = require('lodash'),
     JQL             = require('jsonquerylanguage'),
-    jql             = new JQL(),
-    fs              = require('fs');
+    jql             = new JQL();
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
 
+var fs;
 
 /**
  * ZestCreator class.
@@ -27,18 +27,26 @@ var ZEST_VERSION = "1.0";
 function ZestCreator (options, scpt) {
   var opts = options || {};
   var script = scpt || null;
+  var platform = opts.platform || 'node';
 
-  // load zest from file
-  if (!! opts.file) {
-    var data = fs.readFileSync(opts.file, 'utf8');
-    script = JSON.parse(data);
-  }
+  try {
+    if (_.isEqual(platform, 'node')) {
+      fs = require('fs');
+    } else {
+      console.log('no filesystem access');
+    }
+  } catch (e) {}
 
-  if (!! script) {
-    this.script = script;
+  if (!! script || opts.file) {
     this.config = _.defaults(opts, {
-      debug: DEBUG
+      debug: DEBUG,
+      platform: platform
     });
+    if (!! opts.file) {
+      this.script = this.readZestFile(opts.file);
+    } else {
+      this.script = script;
+    }
     this.index = this.script.index;
     this.statements = this.script.statements;
     this.stmtIndex = getLastStmtIndex(this.statements);
@@ -50,7 +58,8 @@ function ZestCreator (options, scpt) {
       client: 'Zest-Creator',
       author: 'anon',
       zestVersion: ZEST_VERSION,
-      debug: DEBUG
+      debug: DEBUG,
+      platform: platform
     });
 
     this.index = 0;  // script index
@@ -402,7 +411,22 @@ ZestCreator.prototype = {
         text  = JSON.stringify(z, undefined, 2),
         regex = new RegExp('.zst$');
     filename = regex.test(filename) ? filename : (filename + '.zst');
-    fs.writeFileSync(filename, text);
+    if (_.isEqual(this.config.platform, 'node')) {
+      fs.writeFileSync(filename, text);
+    } else {
+      console.log('no filesystem access');
+    }
+  },
+
+  /**
+   * Read zest from file.
+   *
+   * @param {string} filename - Name of the file to be read.
+   * @return {object} - Zest as JSON object.
+   */
+  readZestFile: function (filename) {
+    var data = fs.readFileSync(filename, 'utf8');
+    return JSON.parse(data);
   }
 };
 
