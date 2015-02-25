@@ -1,7 +1,8 @@
-Zest-Creator
+Zest-Creator 
 ============
-
 [![Build Status](https://travis-ci.org/darkowlzz/zest-creator.svg)](https://travis-ci.org/darkowlzz/zest-creator)
+
+[![NPM](https://nodei.co/npm/zest-creator.png)](https://nodei.co/npm/zest-creator/)
 
 Zest Creator tool for creating valid zest script and interact with the script via the helper methods.
 
