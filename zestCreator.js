@@ -29,12 +29,6 @@ function ZestCreator (options, scpt) {
   var script = scpt || null;
   var platform = opts.platform || 'node';
 
-  if (script !== null) {
-    this.fromFile = true;
-  } else {
-    this.fromFile = false;
-  }
-
   try {
     if (_.isEqual(platform, 'node')) {
       fs = require('fs');
@@ -44,6 +38,7 @@ function ZestCreator (options, scpt) {
   } catch (e) {}
 
   if (!! script || opts.file) {
+    this.readyMade = true;
     this.config = _.defaults(opts, {
       debug: DEBUG,
       platform: platform
@@ -57,6 +52,7 @@ function ZestCreator (options, scpt) {
     this.statements = this.script.statements;
     this.stmtIndex = getLastStmtIndex(this.statements);
   } else {
+    this.readyMade = false;
     this.config = _.defaults(opts, {
       about: 'About text',
       title: 'Unnamed Zest script',
@@ -172,7 +168,8 @@ ZestCreator.prototype = {
 
   // Returns a proper zest object.
   getZest: function () {
-    if (this.fromFile) {
+    // Return the script as it is if it's readymade.
+    if (this.readyMade) {
       return this.script;
     } else {
       return {
