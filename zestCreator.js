@@ -29,6 +29,12 @@ function ZestCreator (options, scpt) {
   var script = scpt || null;
   var platform = opts.platform || 'node';
 
+  if (script !== null) {
+    this.fromFile = true;
+  } else {
+    this.fromFile = false;
+  }
+
   try {
     if (_.isEqual(platform, 'node')) {
       fs = require('fs');
@@ -166,25 +172,29 @@ ZestCreator.prototype = {
 
   // Returns a proper zest object.
   getZest: function () {
-    return {
-      about: this.config.about || this.script.about,
-      zestVersion: this.config.zestVersion || this.script.zestVersion,
-      title: this.config.title || this.script.title,
-      description: this.config.description || this.script.description,
-      author: this.config.author || this.script.author,
-      generatedBy: this.config.client || this.script.generatedBy,
-      parameters:  {
-        tokenStart: "{{",
-        tokenEnd: "}}",
-        tokens: {},
-        elementType: 'ZestVariables'
-      } || this.script.parameters,
-      statements: this.statements,
-      authentication: [],
-      index: this.index,
-      enabled: true,
-      elementType: 'ZestScript'
-    };
+    if (this.fromFile) {
+      return this.script;
+    } else {
+      return {
+        about: this.config.about,
+        zestVersion: this.config.zestVersion,
+        title: this.config.title,
+        description: this.config.description,
+        author: this.config.author,
+        generatedBy: this.config.client,
+        parameters: {
+          tokenStart: "{{",
+          tokenEnd: "}}",
+          tokens: {},
+          elementType: 'ZestVariables'
+        },
+        statements: this.statements,
+        authentication: [],
+        index: this.index,
+        enabled: true,
+        elementType: 'ZestScript'
+      };
+    }
   },
 
   // Returns the number of statements in the zest object.
