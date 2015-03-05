@@ -200,6 +200,12 @@ describe('ZC basic testing', function () {
         enabled: true,
         elementType: 'ZestScript'
       });
+      r.parameters.should.have.properties({
+        tokenStart: '{{',
+        tokenEnd: '}}',
+        tokens: {},
+        elementType: 'ZestVariables'
+      });
       zc.statementCount.should.be.exactly(0);
     });
   });

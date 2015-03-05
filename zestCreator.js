@@ -48,6 +48,7 @@ function ZestCreator (options, scpt) {
     } else {
       this.script = script;
     }
+    this.script = this.fixScript(this.script);
     this.index = this.script.index;
     this.statements = this.script.statements;
     this.stmtIndex = getLastStmtIndex(this.statements);
@@ -60,6 +61,7 @@ function ZestCreator (options, scpt) {
       client: 'Zest-Creator',
       author: 'anon',
       zestVersion: ZEST_VERSION,
+      parameters: this.defaultParameters,
       debug: DEBUG,
       platform: platform
     });
@@ -179,12 +181,7 @@ ZestCreator.prototype = {
         description: this.config.description,
         author: this.config.author,
         generatedBy: this.config.client,
-        parameters: {
-          tokenStart: "{{",
-          tokenEnd: "}}",
-          tokens: {},
-          elementType: 'ZestVariables'
-        },
+        parameters: this.config.parameters,
         statements: this.statements,
         authentication: [],
         index: this.index,
@@ -434,6 +431,25 @@ ZestCreator.prototype = {
   readZestFile: function (filename) {
     var data = fs.readFileSync(filename, 'utf8');
     return JSON.parse(data);
+  },
+
+  // Default zest parameters
+  defaultParameters: {
+    tokenStart: '{{',
+    tokenEnd: '}}',
+    tokens: {},
+    elementType: 'ZestVariables'
+  },
+
+  // Fix missing zest attributes.
+  fixScript: function (zs) {
+    // Check for `parameters` and fix it.
+    if (_.has(zs, 'parameters')) {
+      zs.parameters = _.defaults(zs.parameters, this.defaultParameters);
+    } else {
+      zs.parameters = this.defaultParameters;
+    }
+    return zs;
   }
 };
 
