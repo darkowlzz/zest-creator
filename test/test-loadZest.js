@@ -15,6 +15,12 @@ describe('test loading a zest script as json', function () {
     zc.script.title.should.be.exactly('my zest');
     zc.stmtIndex.should.be.exactly(32);
     zc.config.debug.should.be.exactly(false);
+    zc.script.parameters.should.have.properties({
+      tokenStart: '{{',
+      tokenEnd: '}}',
+      tokens: {},
+      elementType: 'ZestVariables'
+    });
   });
 
   it('should get 1st statement', function () {
@@ -88,5 +94,4 @@ describe('test loading a zest file', function () {
       enabled: true
     });
   });
-
 });

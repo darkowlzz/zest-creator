@@ -6,7 +6,6 @@ exports.sampleZest = {
   "author": "mocha",
   "generatedBy": "test client",
   "parameters": {
-    "tokenStart": "{{",
     "tokenEnd": "}}",
     "tokens": {},
     "elementType": "ZestVariables"
