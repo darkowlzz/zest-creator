@@ -2,7 +2,6 @@
 
 var JQL     = require('jsonquerylanguage'),
     jql     = new JQL(),
-    Enum    = require('enum'),
     JefNode = require('json-easy-filter').JefNode;
 
 function getStatement (stmts, index) {
@@ -16,15 +15,22 @@ function getStatement (stmts, index) {
 }
 exports.getStatement = getStatement;
 
-var ZestStatement = new Enum([
+
+var ZestStatements = [
   'ZestComment', 'ZestRequest', 'ZestConditional', 'ZestActionPrint',
   'ZestActionFail', 'ZestActionSleep', 'ZestAssignString',
   'ZestAssignRandomInteger', 'ZestAssignFieldValue', 'ZestAssignReplace',
   'ZestAssignStringDelimiters', 'ZestAssignRegexDelimiters', 'ZestLoopString',
-  // Experimental
   'ZestAssignCalc'
-]);
-exports.ZestStatement = ZestStatement;
+];
+exports.ZestStatements = ZestStatements;
+
+
+var ActiveStatements =  [
+  'ZestRequest'
+];
+exports.ActiveStatements = ActiveStatements;
+
 
 function isSubStatement (statements, index) {
   var res = new JefNode(statements).filter(function (node) {
@@ -40,6 +46,7 @@ function isSubStatement (statements, index) {
 }
 exports.isSubStatement = isSubStatement;
 
+
 function getParent (statements, index) {
   var res = new JefNode(statements).filter(function (node) {
     if (node.value.index === index) {
@@ -53,6 +60,7 @@ function getParent (statements, index) {
   }
 };
 exports.getParent = getParent;
+
 
 function getSubStmtIndex (stmts, stmt) {
   var index = stmts.map(function (obj, index) {

@@ -11,7 +11,7 @@ var createStatement = require('./createStatement'),
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
-
+var SCRIPT_TYPES = ['Standalone', 'Active', 'Passive', 'Targeted'];
 var fs;
 
 /**
@@ -61,6 +61,7 @@ function ZestCreator (options, scpt) {
       client: 'Zest-Creator',
       author: 'anon',
       zestVersion: ZEST_VERSION,
+      type: 'Standalone',
       parameters: this.defaultParameters,
       debug: DEBUG,
       platform: platform
@@ -88,7 +89,7 @@ ZestCreator.prototype = {
       return;
     }
     if (_.has(ele, 'subStatementOf')) {
-      if (!! helper.ZestStatement.get(stmt.elementType)) {
+      if (helper.ZestStatements.indexOf(stmt.elementType) > -1) {
         stmt.index = this._makeSpace(ele);
         stmt.enabled = true;
       }
@@ -429,6 +430,7 @@ ZestCreator.prototype = {
    * @return {object} - Zest as JSON object.
    */
   readZestFile: function (filename) {
+    fs = require('fs');
     var data = fs.readFileSync(filename, 'utf8');
     return JSON.parse(data);
   },
@@ -443,12 +445,73 @@ ZestCreator.prototype = {
 
   // Fix missing zest attributes.
   fixScript: function (zs) {
+    var stmts;
+
+    // Check for `type`.
+    if (! _.has(zs, 'type')) {
+      zs.type = 'Standalone';
+    } else {
+      if (!~ SCRIPT_TYPES.indexOf(zs.type)) {
+        throw 'Error: Unrecognized script type ' + zs.type;
+      }
+    }
+
     // Check for `parameters` and fix it.
     if (_.has(zs, 'parameters')) {
       zs.parameters = _.defaults(zs.parameters, this.defaultParameters);
     } else {
       zs.parameters = this.defaultParameters;
     }
+
+    if (_.isEqual(zs.type, 'Passive')) {
+      console.log('This is passive');
+      // Check for non-passive statements
+      zs.statements.forEach(function (stmt) {
+        if (helper.ActiveStatements.indexOf(stmt.elementType) != -1) {
+          throw 'Error: ' + stmt.elementType +
+                ' not allowed in passive scripts.';
+        }
+      });
+
+      // Add default tokens if empty.
+      if (_.isEmpty(zs.parameters.tokens)) {
+        var defaultPassiveTokens = {
+          'response.body': '',
+          'response.header': '',
+          'request.body': '',
+          'request.header': '',
+          'request.url': '',
+          'request.method': ''
+        };
+        zs.parameters.tokens = _.defaults(zs.parameters.tokens,
+                                          defaultPassiveTokens);
+      }
+    } else if (_.isEqual(zs.type, 'Active')) {
+      // Add default tokens if empty.
+      if (_.isEmpty(zs.parameters.tokens)) {
+        var defaultActiveTokens = {
+          'request.header': '',
+          'request.body': '',
+          'request.method': '',
+          'request.url': ''
+        };
+        zs.parameters.tokens = _.defaults(zs.parameters.tokens,
+                                          defaultActiveTokens);
+      }
+    } else if (_.isEqual(zs.type, 'Targeted')) {
+      // Add default tokens if empty.
+      if (_.isEmpty(zs.parameters.tokens)) {
+        var defaultTargetTokens = {
+          'request.header': '',
+          'request.body': '',
+          'request.method': '',
+          'request.url': ''
+        };
+        zs.parameters.tokens = _.defaults(zs.parameters.tokens,
+                                          defaultTargetTokens);
+      }
+    }
+
     return zs;
   }
 };
