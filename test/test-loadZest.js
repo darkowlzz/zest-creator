@@ -95,3 +95,56 @@ describe('test loading a zest file', function () {
     });
   });
 });
+
+describe('test loading various types of scripts', function () {
+  var zc, z;
+
+  it('should fail to load unrecognized script', function () {
+    try {
+      zc = new ZestCreator({file: 'testData/badType.js'});
+    } catch (e) {
+      e.should.be.exactly('Error: Unrecognized script type ive');
+    }
+  });
+
+  it('should make no type scipt to standalone', function () {
+    zc = new ZestCreator({file: 'testData/noType.js'});
+    z = zc.getZest();
+    z.type.should.be.exactly('Standalone');
+  });
+
+  it('should fail when non-passive stmts are in passive script', function () {
+    try {
+      zc = new ZestCreator({file: 'testData/failPassive.js'});
+    } catch (e) {
+      e.should.be.exactly('Error: ZestRequest not allowed in passive scripts.');
+    }
+  });
+
+  it('should add param tokens to passive scripts if no tokens', function () {
+    zc = new ZestCreator({file: 'testData/missingTokensPassive.js'});
+    z = zc.getZest();
+    z.parameters.tokens.should.have.properties('response.body',
+      'response.header', 'request.body', 'request.header',
+      'request.url', 'request.method');
+  });
+
+  it('should leave param tokens as it is if given, passive', function () {
+    zc = new ZestCreator({file: 'testData/tokensPassive.js'});
+    z = zc.getZest();
+    z.parameters.tokens.should.have.property('foo');
+  })
+
+  it('should auto add param tokens to active scripts', function () {
+    zc = new ZestCreator({file: 'testData/missingTokensActive.js'});
+    z = zc.getZest();
+    z.parameters.tokens.should.have.properties('request.header',
+      'request.body', 'request.url', 'request.method');
+  });
+
+  it('should leave param tokens as it is if given, active', function () {
+    zc = new ZestCreator({file: 'testData/tokensActive.js'});
+    z = zc.getZest();
+    z.parameters.tokens.should.have.property('foo');
+  });
+});
