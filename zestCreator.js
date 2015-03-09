@@ -464,7 +464,6 @@ ZestCreator.prototype = {
     }
 
     if (_.isEqual(zs.type, 'Passive')) {
-      console.log('This is passive');
       // Check for non-passive statements
       zs.statements.forEach(function (stmt) {
         if (helper.ActiveStatements.indexOf(stmt.elementType) != -1) {
