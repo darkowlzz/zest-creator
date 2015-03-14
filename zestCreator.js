@@ -11,7 +11,7 @@ var createStatement = require('./createStatement'),
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
-var SCRIPT_TYPES = ['Standalone', 'Active', 'Passive', 'Targeted'];
+var SCRIPT_TYPES = ['StandAlone', 'Active', 'Passive', 'Targeted'];
 var fs;
 
 /**
