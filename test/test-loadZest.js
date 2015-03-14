@@ -56,7 +56,7 @@ describe('test loading a zest script as json', function () {
 });
 
 describe('test loading a zest file', function () {
-  var zc = new ZestCreator({file: 'testData/sampleDataSet2.js'});
+  var zc = new ZestCreator({file: 'testData/sampleDataSet2.zst'});
 
   it('should have correct attributes', function () {
     zc.script.title.should.be.exactly('my zest');
@@ -101,28 +101,28 @@ describe('test loading various types of scripts', function () {
 
   it('should fail to load unrecognized script', function () {
     try {
-      zc = new ZestCreator({file: 'testData/badType.js'});
+      zc = new ZestCreator({file: 'testData/badType.zst'});
     } catch (e) {
       e.should.be.exactly('Error: Unrecognized script type ive');
     }
   });
 
   it('should make no type scipt to standalone', function () {
-    zc = new ZestCreator({file: 'testData/noType.js'});
+    zc = new ZestCreator({file: 'testData/noType.zst'});
     z = zc.getZest();
     z.type.should.be.exactly('Standalone');
   });
 
   it('should fail when non-passive stmts are in passive script', function () {
     try {
-      zc = new ZestCreator({file: 'testData/failPassive.js'});
+      zc = new ZestCreator({file: 'testData/failPassive.zst'});
     } catch (e) {
       e.should.be.exactly('Error: ZestRequest not allowed in passive scripts.');
     }
   });
 
   it('should add param tokens to passive scripts if no tokens', function () {
-    zc = new ZestCreator({file: 'testData/missingTokensPassive.js'});
+    zc = new ZestCreator({file: 'testData/missingTokensPassive.zst'});
     z = zc.getZest();
     z.parameters.tokens.should.have.properties('response.body',
       'response.header', 'request.body', 'request.header',
@@ -130,20 +130,20 @@ describe('test loading various types of scripts', function () {
   });
 
   it('should leave param tokens as it is if given, passive', function () {
-    zc = new ZestCreator({file: 'testData/tokensPassive.js'});
+    zc = new ZestCreator({file: 'testData/tokensPassive.zst'});
     z = zc.getZest();
     z.parameters.tokens.should.have.property('foo');
   })
 
   it('should auto add param tokens to active scripts', function () {
-    zc = new ZestCreator({file: 'testData/missingTokensActive.js'});
+    zc = new ZestCreator({file: 'testData/missingTokensActive.zst'});
     z = zc.getZest();
     z.parameters.tokens.should.have.properties('request.header',
       'request.body', 'request.url', 'request.method');
   });
 
   it('should leave param tokens as it is if given, active', function () {
-    zc = new ZestCreator({file: 'testData/tokensActive.js'});
+    zc = new ZestCreator({file: 'testData/tokensActive.zst'});
     z = zc.getZest();
     z.parameters.tokens.should.have.property('foo');
   });
