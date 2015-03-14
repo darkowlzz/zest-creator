@@ -11,7 +11,7 @@ var createStatement = require('./createStatement'),
 
 var DEBUG = true;
 var ZEST_VERSION = "1.0";
-var SCRIPT_TYPES = ['StandAlone', 'Active', 'Passive', 'Targeted'];
+var SCRIPT_TYPES = ['standalone', 'active', 'passive', 'targeted'];
 var fs;
 
 /**
@@ -451,7 +451,7 @@ ZestCreator.prototype = {
     if (! _.has(zs, 'type')) {
       zs.type = 'Standalone';
     } else {
-      if (!~ SCRIPT_TYPES.indexOf(zs.type)) {
+      if (!~ SCRIPT_TYPES.indexOf(zs.type.toLowerCase())) {
         throw 'Error: Unrecognized script type ' + zs.type;
       }
     }
