@@ -156,7 +156,11 @@ function createStatement (ele) {
       break;
 
     case 'ZestAssignString':
-      stmt = _.pick(ele, 'string', 'variableName', 'elementType');
+      properties = _.pick(ele, 'string', 'variableName', 'elementType',
+                          'trimWhitespace');
+      stmt = _.defaults(properties, {
+        trimWhitespace: false
+      });
       break;
 
     case 'ZestAssignRandomInteger':
@@ -196,15 +200,21 @@ function createStatement (ele) {
       break;
 
     case 'ZestAssignStringDelimiters':
-      stmt = _.pick(ele,
+      properties = _.pick(ele,
                     'prefix', 'postfix', 'location', 'variableName',
-                    'elementType');
+                    'trimWhitespace', 'elementType');
+      stmt = _.defaults(properties, {
+        trimWhitespace: false
+      });
       break;
 
     case 'ZestAssignRegexDelimiters':
-      stmt = _.pick(ele,
-                    'prefix', 'postfix', 'location', 'variableName',
-                    'elementType');
+      properties = _.pick(ele,
+                          'prefix', 'postfix', 'location', 'variableName',
+                          'trimWhitespace', 'elementType');
+      stmt = _.defaults(properties, {
+        trimWhitespace: false
+      });
       break;
 
     case 'ZestLoopTokenStringSet':

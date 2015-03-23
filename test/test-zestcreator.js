@@ -498,6 +498,7 @@ describe('ZC basic testing', function () {
         string: 'Mr. Zest',
         variableName: 'name',
         elementType: 'ZestAssignString',
+        trimWhitespace: false,
         index: 16,
         enabled: true
       });
@@ -561,6 +562,7 @@ describe('ZC basic testing', function () {
         postfix: 'cc',
         location: 'HEAD',
         variableName: 'bb',
+        trimWhitespace: false,
         index: 20,
         enabled: true,
         elementType: 'ZestAssignStringDelimiters'
@@ -576,6 +578,7 @@ describe('ZC basic testing', function () {
         postfix: 'zz',
         location: 'HEAD',
         variableName: 'dd',
+        trimWhitespace: false,
         index: 21,
         enabled: true,
         elementType: 'ZestAssignRegexDelimiters'

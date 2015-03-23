@@ -25,6 +25,5 @@ function addToStatement (stmt, ele, stmts) {
         parent[ele.subStatementOf] = [];
       }
       parent[ele.subStatementOf].push(stmt);
-
   }
 }
