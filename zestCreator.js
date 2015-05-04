@@ -212,12 +212,6 @@ ZestCreator.prototype = {
     return helper.getParent(this.statements, index);
   },
 
-  log: function (message, args) {
-    if (this.debug) {
-      console.log(message, args);
-    }
-  },
-
   /**
    * Delete a given statement from the list of statements.
    *
